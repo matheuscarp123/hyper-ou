@@ -151,7 +151,7 @@ export default function LoadingPage() {
   )
 }
 
-// Função para gerar plano de treino baseado no perfil e dias disponíveis
+// Função para gerar plano de treino baseado no perfil
 function generateWorkoutPlan(userProfile: UserProfile): Workout {
   const { physique, trainingDays = 3 } = userProfile
 
@@ -178,8 +178,8 @@ function generateWorkoutPlan(userProfile: UserProfile): Workout {
       split = "ABC (Corpo dividido em 3)"
   }
 
-  // Plano básico para Arnold com 3 dias
-  const arnoldPlan: Workout = {
+  // Plano básico para qualquer físico com 3 dias
+  const basicPlan: Workout = {
     split,
     routine: [
       {
@@ -188,16 +188,15 @@ function generateWorkoutPlan(userProfile: UserProfile): Workout {
         exercises: [
           {
             name: "Supino Reto",
-            sets: "5",
+            sets: "4",
             reps: "8-12",
-            importance:
-              "Exercício fundamental para desenvolvimento do peitoral, essencial para o volume torácico característico de Arnold.",
+            importance: "Exercício fundamental para desenvolvimento do peitoral, base para um tórax forte e definido.",
             technique:
               "Mantenha os cotovelos em ângulo de 45° em relação ao corpo e desça a barra até tocar levemente o peito.",
           },
           {
             name: "Supino Inclinado",
-            sets: "4",
+            sets: "3",
             reps: "8-12",
             importance: "Desenvolve a parte superior do peitoral, criando a aparência completa e cheia do tórax.",
             technique:
@@ -214,7 +213,7 @@ function generateWorkoutPlan(userProfile: UserProfile): Workout {
           },
           {
             name: "Tríceps Testa",
-            sets: "4",
+            sets: "3",
             reps: "10-12",
             importance: "Desenvolve a cabeça longa do tríceps para braços volumosos e definidos.",
             technique: "Mantenha os cotovelos apontados para cima e não os deixe abrir durante o movimento.",
@@ -247,26 +246,25 @@ function generateWorkoutPlan(userProfile: UserProfile): Workout {
             technique: "Mantenha as costas paralelas ao solo e puxe o peso em direção ao umbigo.",
           },
           {
-            name: "Pullover com Halteres",
+            name: "Puxada Frontal",
             sets: "3",
-            reps: "12-15",
-            importance:
-              "Expande a caixa torácica e trabalha a conexão entre peito e costas, técnica favorita de Arnold.",
-            technique: "Mantenha apenas um leve dobramento nos cotovelos durante todo o movimento.",
+            reps: "10-12",
+            importance: "Trabalha o dorsal com ênfase na largura, criando o V-taper desejado.",
+            technique: "Puxe a barra até a altura do peito, contraindo as escápulas.",
           },
           {
-            name: "Rosca Direta com Barra",
+            name: "Rosca Direta",
             sets: "4",
             reps: "8-12",
             importance: "Exercício básico para desenvolvimento dos bíceps, permitindo usar cargas mais pesadas.",
             technique: "Mantenha os cotovelos junto ao corpo e não balance durante o movimento.",
           },
           {
-            name: "Rosca Concentrada",
+            name: "Rosca Martelo",
             sets: "3",
             reps: "12-15",
-            importance: "Isolamento do bíceps para máximo pico, técnica favorita de Arnold.",
-            technique: "Apoie o cotovelo na parte interna da coxa e mantenha-o fixo durante todo o movimento.",
+            importance: "Trabalha o braquial e bíceps para braços mais grossos e definidos.",
+            technique: "Mantenha os punhos neutros durante todo o movimento.",
           },
         ],
       },
@@ -276,18 +274,17 @@ function generateWorkoutPlan(userProfile: UserProfile): Workout {
         exercises: [
           {
             name: "Agachamento",
-            sets: "5",
+            sets: "4",
             reps: "8-12",
             importance: "Exercício fundamental para desenvolvimento completo das pernas e estimulação hormonal.",
             technique: "Mantenha o peito erguido e desça até que as coxas fiquem paralelas ao solo.",
           },
           {
             name: "Leg Press",
-            sets: "4",
+            sets: "3",
             reps: "10-15",
             importance: "Complementa o agachamento para desenvolvimento dos quadríceps.",
-            technique:
-              "Posicione os pés na parte superior da plataforma para maior ênfase nos glúteos e isquiotibiais.",
+            technique: "Posicione os pés na parte superior da plataforma para maior ênfase nos glúteos.",
           },
           {
             name: "Desenvolvimento Militar",
@@ -305,9 +302,9 @@ function generateWorkoutPlan(userProfile: UserProfile): Workout {
           },
           {
             name: "Panturrilha em Pé",
-            sets: "5",
+            sets: "4",
             reps: "15-20",
-            importance: "Desenvolvimento das panturrilhas, ponto fraco de muitos fisiculturistas.",
+            importance: "Desenvolvimento das panturrilhas para completar o visual das pernas.",
             technique: "Eleve-se o mais alto possível e segure por 1 segundo no topo para máxima contração.",
           },
         ],
@@ -315,14 +312,17 @@ function generateWorkoutPlan(userProfile: UserProfile): Workout {
     ],
   }
 
-  // Retorna o plano baseado na referência escolhida ou um plano padrão
-  return arnoldPlan
+  return basicPlan
 }
 
 // Função para gerar plano de dieta baseado no perfil
 function generateDietPlan(userProfile: UserProfile) {
   // Calcular necessidades calóricas baseadas no peso e altura
-  const bmr = 88.362 + 13.397 * userProfile.weight + 4.799 * userProfile.height - 5.677 * 25 // Assumindo 25 anos
+  const bmr =
+    userProfile.gender === "male"
+      ? 88.362 + 13.397 * userProfile.weight + 4.799 * userProfile.height - 5.677 * 25
+      : 447.593 + 9.247 * userProfile.weight + 3.098 * userProfile.height - 4.33 * 25
+
   const totalCalories = Math.round(bmr * 1.7) // Fator de atividade alta
 
   const proteinGrams = Math.round(userProfile.weight * 2.2) // 2.2g por kg

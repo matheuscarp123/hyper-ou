@@ -2,8 +2,6 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { SecurityWrapper } from "@/components/security-wrapper"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -16,12 +14,6 @@ export const metadata: Metadata = {
   creator: "Matheus Carvalho",
   publisher: "Matheus Carvalho",
   keywords: ["treino", "dieta", "hipertrofia", "musculação", "fitness", "matheus carvalho"],
-  robots: "noindex, nofollow, noarchive, nosnippet, noimageindex",
-  other: {
-    copyright: "© 2024 Matheus Carvalho. Todos os direitos reservados.",
-    author: "Matheus Carvalho",
-    owner: "Matheus Carvalho",
-  },
 }
 
 export default function RootLayout({
@@ -37,13 +29,7 @@ export default function RootLayout({
         <meta name="owner" content="Matheus Carvalho" />
         <meta name="application-name" content="HyperGym by Matheus Carvalho" />
       </head>
-      <body className={`${inter.className} antialiased`}>
-        <SecurityWrapper>
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
-            {children}
-          </ThemeProvider>
-        </SecurityWrapper>
-      </body>
+      <body className={`${inter.className} antialiased`}>{children}</body>
     </html>
   )
 }

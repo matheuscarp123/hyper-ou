@@ -1,33 +1,41 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { LogoWithText } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
-import { PremiumManager } from "@/lib/premium"
-import { AdManager } from "@/lib/ads"
+
+const motivationalPhrases = [
+  "HyperGym será seu personal trainer e nutricionista particular",
+  "Baseado na rotina dos maiores atletas (Arnold, CBum, Ramon, Zyzz)",
+  "Economize dinheiro com seu app all-in-one",
+  "Suplementação e dieta ajustadas às suas medidas",
+  "Transforme seu corpo com os segredos dos campeões",
+  "Planos personalizados dos maiores fisiculturistas do mundo",
+]
 
 export default function Home() {
   const router = useRouter()
   const [isLoaded, setIsLoaded] = useState(false)
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0)
 
   useEffect(() => {
     setIsLoaded(true)
 
-    // Inicializar sistemas
-    const premiumManager = PremiumManager.getInstance()
-    const adManager = AdManager.getInstance()
-
-    // Verificar acessos temporários expirados
-    premiumManager.checkTemporaryAccess()
+    // Alternar frases motivacionais
+    const phraseInterval = setInterval(() => {
+      setCurrentPhraseIndex((prev) => (prev + 1) % motivationalPhrases.length)
+    }, 3000)
 
     // Se já existe um plano completo, redireciona para o dashboard
     const existingPlan = localStorage.getItem("fitnessProfile")
     if (existingPlan) {
       router.push("/dashboard")
     }
+
+    return () => clearInterval(phraseInterval)
   }, [router])
 
   return (
@@ -46,14 +54,21 @@ export default function Home() {
       >
         <LogoWithText />
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="mt-6 text-lg text-gray-400 max-w-md"
-        >
-          Planos de treino e dieta personalizados para hipertrofia extrema
-        </motion.p>
+        {/* Frases motivacionais rotativas */}
+        <div className="mt-6 h-16 flex items-center justify-center max-w-md">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={currentPhraseIndex}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="text-lg text-gray-400 text-center leading-relaxed"
+            >
+              {motivationalPhrases[currentPhraseIndex]}
+            </motion.p>
+          </AnimatePresence>
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
