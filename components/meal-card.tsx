@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Clock, Utensils, Sparkles } from "lucide-react"
+import { Clock, Utensils, Beef, Wheat, Droplets } from "lucide-react"
 import type { Meal } from "@/types"
 
 interface MealCardProps {
@@ -10,108 +10,83 @@ interface MealCardProps {
   index: number
 }
 
-const mealColors = [
-  {
-    gradient: "from-amber-500 to-orange-600",
-    shadow: "shadow-amber-500/25",
-    icon: "🌅",
-    accent: "text-amber-400",
-  },
-  {
-    gradient: "from-emerald-500 to-teal-600",
-    shadow: "shadow-emerald-500/25",
-    icon: "🥗",
-    accent: "text-emerald-400",
-  },
-  {
-    gradient: "from-blue-500 to-cyan-600",
-    shadow: "shadow-blue-500/25",
-    icon: "🍽️",
-    accent: "text-blue-400",
-  },
-  {
-    gradient: "from-purple-500 to-indigo-600",
-    shadow: "shadow-purple-500/25",
-    icon: "⚡",
-    accent: "text-purple-400",
-  },
-  {
-    gradient: "from-red-500 to-pink-600",
-    shadow: "shadow-red-500/25",
-    icon: "💪",
-    accent: "text-red-400",
-  },
-  {
-    gradient: "from-slate-500 to-gray-600",
-    shadow: "shadow-slate-500/25",
-    icon: "🌙",
-    accent: "text-slate-400",
-  },
-  {
-    gradient: "from-indigo-500 to-purple-600",
-    shadow: "shadow-indigo-500/25",
-    icon: "🌟",
-    accent: "text-indigo-400",
-  },
-]
-
 export function MealCard({ meal, index }: MealCardProps) {
-  const colorScheme = mealColors[index % mealColors.length]
+  // Função para extrair informações nutricionais da descrição
+  const extractNutrients = (description: string) => {
+    const proteins = description.match(/(\d+g?\s*de\s*(frango|salmão|whey|claras?|ovos?|queijo|carne))/gi) || []
+    const carbs = description.match(/(\d+g?\s*de\s*(aveia|arroz|banana|batata|pão|macarrão))/gi) || []
+    const fats = description.match(/(\d+g?\s*de\s*(amendoim|castanha|azeite|abacate))/gi) || []
+
+    return { proteins, carbs, fats }
+  }
+
+  const nutrients = extractNutrients(meal.description)
+
+  // Função para destacar ingredientes na descrição
+  const highlightIngredients = (text: string) => {
+    return text
+      .replace(/(whey protein|frango|salmão|queijo cottage)/gi, '<span class="text-blue-400 font-medium">$1</span>')
+      .replace(/(aveia|arroz|banana|batata doce|dextrose)/gi, '<span class="text-yellow-400 font-medium">$1</span>')
+      .replace(/(amendoim|castanhas|azeite|abacate)/gi, '<span class="text-green-400 font-medium">$1</span>')
+  }
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -30, scale: 0.95 }}
-      animate={{ opacity: 1, x: 0, scale: 1 }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-      whileHover={{ scale: 1.02, y: -2 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileHover={{ y: -2 }}
     >
-      <Card
-        className={`bg-gradient-to-br ${colorScheme.gradient} border-0 text-white ${colorScheme.shadow} overflow-hidden relative`}
-      >
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(-45deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px] opacity-30"></div>
-
-        {/* Floating Icon */}
-        <div className="absolute top-4 right-4 text-2xl opacity-20">{colorScheme.icon}</div>
-
-        <CardHeader className="pb-3 relative z-10">
+      <Card className="bg-gray-900/50 border-gray-800 hover:border-gray-700 transition-all duration-300 backdrop-blur-sm overflow-hidden">
+        <CardHeader className="pb-3">
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-                <Utensils size={18} />
+              <div className="p-2 bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-lg">
+                <Utensils size={18} className="text-white" />
               </div>
               <div>
-                <span className="font-bold text-lg">{meal.name}</span>
-                <div className="flex items-center gap-2 text-sm opacity-90 mt-1">
+                <span className="font-bold text-lg text-white">{meal.name}</span>
+                <div className="flex items-center gap-2 text-sm text-gray-400 mt-1">
                   <Clock size={12} />
                   <span>{meal.time}</span>
                 </div>
               </div>
             </div>
-            <div className="p-2 bg-white/10 rounded-full backdrop-blur-sm">
-              <Sparkles size={16} />
-            </div>
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="relative z-10">
-          <div className="bg-black/20 rounded-lg p-4 backdrop-blur-sm">
-            <p className="text-sm leading-relaxed opacity-95">{meal.description}</p>
+        <CardContent className="space-y-4">
+          {/* Descrição principal */}
+          <div className="bg-gray-800/30 rounded-xl p-4">
+            <p
+              className="text-sm text-gray-300 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: highlightIngredients(meal.description) }}
+            />
           </div>
 
-          {/* Nutrition Hint */}
-          <div className="mt-3 flex items-center space-x-2 text-xs opacity-80">
-            <div className="w-2 h-2 bg-white rounded-full"></div>
-            <span>
-              {meal.name.includes("Café") && "Rico em proteínas para começar o dia"}
-              {meal.name.includes("Lanche") && "Energia rápida entre refeições"}
-              {meal.name.includes("Almoço") && "Refeição principal do dia"}
-              {meal.name.includes("Pré") && "Combustível para o treino"}
-              {meal.name.includes("Pós") && "Recuperação muscular"}
-              {meal.name.includes("Jantar") && "Nutrição para a noite"}
-              {meal.name.includes("Ceia") && "Proteína de digestão lenta"}
-            </span>
-          </div>
+          {/* Indicadores nutricionais */}
+          {(nutrients.proteins.length > 0 || nutrients.carbs.length > 0 || nutrients.fats.length > 0) && (
+            <div className="grid grid-cols-3 gap-2">
+              {nutrients.proteins.length > 0 && (
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-2 text-center">
+                  <Beef size={14} className="text-blue-400 mx-auto mb-1" />
+                  <span className="text-xs text-blue-400 font-medium">Proteína</span>
+                </div>
+              )}
+              {nutrients.carbs.length > 0 && (
+                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-2 text-center">
+                  <Wheat size={14} className="text-yellow-400 mx-auto mb-1" />
+                  <span className="text-xs text-yellow-400 font-medium">Carboidrato</span>
+                </div>
+              )}
+              {nutrients.fats.length > 0 && (
+                <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-2 text-center">
+                  <Droplets size={14} className="text-green-400 mx-auto mb-1" />
+                  <span className="text-xs text-green-400 font-medium">Gordura</span>
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
     </motion.div>
