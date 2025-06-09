@@ -7,6 +7,7 @@ import { LogoWithText } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
+// Frases motivacionais que serão exibidas na tela inicial
 const motivationalPhrases = [
   "HyperGym será seu personal trainer e nutricionista particular",
   "Baseado na rotina dos maiores atletas (Arnold, CBum, Ramon, Zyzz)",
@@ -24,10 +25,10 @@ export default function Home() {
   useEffect(() => {
     setIsLoaded(true)
 
-    // Alternar frases motivacionais
+    // Alternar frases motivacionais a cada 5 segundos (aumentado de 3s para 5s)
     const phraseInterval = setInterval(() => {
       setCurrentPhraseIndex((prev) => (prev + 1) % motivationalPhrases.length)
-    }, 3000)
+    }, 5000)
 
     // Se já existe um plano completo, redireciona para o dashboard
     const existingPlan = localStorage.getItem("fitnessProfile")
@@ -35,6 +36,7 @@ export default function Home() {
       router.push("/dashboard")
     }
 
+    // Limpar o intervalo quando o componente for desmontado
     return () => clearInterval(phraseInterval)
   }, [router])
 
@@ -54,15 +56,15 @@ export default function Home() {
       >
         <LogoWithText />
 
-        {/* Frases motivacionais rotativas */}
-        <div className="mt-6 h-16 flex items-center justify-center max-w-md">
+        {/* Frases motivacionais rotativas com transição horizontal */}
+        <div className="mt-6 h-16 flex items-center justify-center max-w-md overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.p
               key={currentPhraseIndex}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              initial={{ opacity: 0, x: 100 }} // Começa fora da tela à direita
+              animate={{ opacity: 1, x: 0 }} // Desliza para a posição
+              exit={{ opacity: 0, x: -100 }} // Sai pela esquerda
+              transition={{ duration: 0.8, ease: "easeInOut" }}
               className="text-lg text-gray-400 text-center leading-relaxed"
             >
               {motivationalPhrases[currentPhraseIndex]}

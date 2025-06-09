@@ -6,8 +6,9 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowRight, Crown, Gift, Star } from "lucide-react"
+import { Crown, Star } from "lucide-react"
 import type { UserProfile } from "@/types"
+import { PremiumManager } from "@/lib/premium"
 
 // Referências de físico para homens
 const malePhysiques = [
@@ -309,6 +310,8 @@ export default function PhysiquePage() {
   const [selectedPhysique, setSelectedPhysique] = useState<string>("")
   const [category, setCategory] = useState<string>("all")
   const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const [selectedPremiumPhysique, setSelectedPremiumPhysique] = useState<string | null>(null)
+  const [premiumManager] = useState(() => PremiumManager.getInstance())
 
   useEffect(() => {
     const storedProfile = localStorage.getItem("userProfile")
@@ -323,6 +326,7 @@ export default function PhysiquePage() {
     const physique = physiques.find((p) => p.id === id)
 
     if (physique?.premium) {
+      setSelectedPremiumPhysique(id)
       setShowPremiumModal(true)
       return
     }
@@ -339,6 +343,28 @@ export default function PhysiquePage() {
       localStorage.setItem("userProfile", JSON.stringify(updatedProfile))
       router.push("/loading")
     }
+  }
+
+  const handlePurchasePlan = async (planId: string) => {
+    const result = await premiumManager.purchasePlan(planId)
+    
+    if (result.success) {
+      // Se a compra foi bem-sucedida e temos um físico premium selecionado
+      if (selectedPremiumPhysique) {
+        setSelectedPhysique(selectedPremiumPhysique)
+        setShowPremiumModal(false)
+      }
+    }
+  }
+
+  const handleFreeTrial = () => {
+    // Iniciar teste grátis de 7 dias
+    premiumManager.purchasePlan("trial").then(result => {
+      if (result.success && selectedPremiumPhysique) {
+        setSelectedPhysique(selectedPremiumPhysique)
+        setShowPremiumModal(false)
+      }
+    })
   }
 
   // Selecionar físicos baseado no gênero
@@ -463,82 +489,7 @@ export default function PhysiquePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black/90 to-transparent flex justify-center z-50"
+              className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black/90 to-transparent flex justify-center z-30"
             >
               <Button size="lg" className="px-8 font-bold text-lg" onClick={handleContinue}>
-                GERAR MEU PLANO <ArrowRight className="ml-2" size={18} />
-              </Button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      {/* Premium Modal */}
-      <AnimatePresence>
-        {showPremiumModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={() => setShowPremiumModal(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-gray-900 rounded-2xl border border-yellow-500/30 max-w-md w-full"
-            >
-              <div className="p-6 text-center">
-                <div className="mx-auto mb-4 p-3 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-full w-fit">
-                  <Crown size={32} className="text-black" />
-                </div>
-
-                <h2 className="text-2xl font-bold text-white mb-2">Conteúdo Premium</h2>
-                <p className="text-gray-400 mb-6">
-                  Acesse os planos dos maiores fisiculturistas do mundo: Arnold, CBum, Ramon, Zyzz e muito mais!
-                </p>
-
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center gap-3 text-left">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                    <span className="text-sm text-gray-300">Planos detalhados dos campeões</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-left">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                    <span className="text-sm text-gray-300">Dietas personalizadas</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-left">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                    <span className="text-sm text-gray-300">Suplementação específica</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-left">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                    <span className="text-sm text-gray-300">Sem anúncios</span>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <Button className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold h-12">
-                    <Crown className="mr-2" size={16} />
-                    Fazer Upgrade - R$ 19,90/mês
-                  </Button>
-
-                  <Button variant="outline" className="w-full border-green-500/50 text-green-400 hover:bg-green-500/10">
-                    <Gift className="mr-2" size={16} />
-                    Teste Grátis por 7 Dias
-                  </Button>
-
-                  <Button variant="ghost" className="w-full text-gray-400" onClick={() => setShowPremiumModal(false)}>
-                    Continuar com Plano Gratuito
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </main>
-  )
-}
+                \
