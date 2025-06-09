@@ -27,6 +27,9 @@ export default function DashboardPage() {
   }, [router])
 
   const handleNewPlan = () => {
+    // Limpa todos os dados armazenados
+    localStorage.removeItem("userProfile")
+    localStorage.removeItem("fitnessProfile")
     localStorage.clear()
     router.push("/")
   }

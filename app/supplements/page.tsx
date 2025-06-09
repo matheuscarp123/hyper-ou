@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Pill, Star, AlertTriangle, ArrowLeft, Filter } from "lucide-react"
+import { Pill, AlertTriangle, ArrowLeft } from "lucide-react"
 import type { UserProfile } from "@/types"
 import { SupplementCard } from "@/components/supplement-card"
 
@@ -236,17 +236,9 @@ const supplementsDatabase = {
   ],
 }
 
-const categoryLabels = {
-  essential: "Essencial",
-  important: "Importante",
-  optional: "Opcional",
-  bonus: "Bônus",
-}
-
 export default function SupplementsPage() {
   const router = useRouter()
   const [userProfile, setUserProfile] = useState<Partial<UserProfile>>({})
-  const [filter, setFilter] = useState<string>("all")
 
   useEffect(() => {
     const storedProfile = localStorage.getItem("userProfile")
@@ -258,16 +250,6 @@ export default function SupplementsPage() {
   }, [router])
 
   const supplements = userProfile.gender ? supplementsDatabase[userProfile.gender] : []
-
-  const filteredSupplements = filter === "all" ? supplements : supplements.filter((s) => s.category === filter)
-
-  const categories = [
-    { id: "all", label: "Todos", count: supplements.length },
-    { id: "essential", label: "Essenciais", count: supplements.filter((s) => s.category === "essential").length },
-    { id: "important", label: "Importantes", count: supplements.filter((s) => s.category === "important").length },
-    { id: "optional", label: "Opcionais", count: supplements.filter((s) => s.category === "optional").length },
-    { id: "bonus", label: "Bônus", count: supplements.filter((s) => s.category === "bonus").length },
-  ]
 
   return (
     <main className="min-h-screen bg-black relative">
@@ -306,82 +288,30 @@ export default function SupplementsPage() {
                 <p className="text-gray-400">Ranking de prioridade para seus objetivos</p>
               </div>
             </div>
-
-            {/* Aviso importante */}
-            <Card className="bg-amber-500/10 border-amber-500/20 mb-6">
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
-                  <AlertTriangle size={20} className="text-amber-400 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-medium text-amber-400 mb-1">Aviso Importante</h3>
-                    <p className="text-sm text-gray-300 leading-relaxed">
-                      Estas são sugestões baseadas em evidências científicas. Em caso de alergias, condições médicas ou
-                      falta de efetividade, consulte um profissional de saúde qualificado antes de iniciar qualquer
-                      suplementação.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Filtros */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-8"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <Filter size={16} className="text-gray-400" />
-              <span className="text-sm text-gray-400">Filtrar por categoria:</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <Button
-                  key={category.id}
-                  variant={filter === category.id ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setFilter(category.id)}
-                  className="rounded-full"
-                >
-                  {category.label}
-                  <span className="ml-1 text-xs opacity-70">({category.count})</span>
-                </Button>
-              ))}
-            </div>
           </motion.div>
 
           {/* Lista de Suplementos */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {filteredSupplements.map((supplement, index) => (
+          <div className="grid md:grid-cols-2 gap-6 mb-12">
+            {supplements.map((supplement, index) => (
               <SupplementCard key={supplement.name} supplement={supplement} index={index} />
             ))}
           </div>
 
-          {/* Ranking visual */}
+          {/* Aviso discreto no final */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mt-12"
+            transition={{ delay: 0.5 }}
+            className="mt-8"
           >
-            <Card className="bg-gray-900/50 border-gray-800">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <Star size={20} className="text-yellow-400" />
-                  <h3 className="text-xl font-bold text-white">Ranking de Prioridade</h3>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {supplements.slice(0, 8).map((supplement, index) => (
-                    <div key={supplement.name} className="text-center">
-                      <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <span className="text-white font-bold">{supplement.priority}</span>
-                      </div>
-                      <p className="text-sm font-medium text-white">{supplement.name}</p>
-                      <p className="text-xs text-gray-400">{categoryLabels[supplement.category]}</p>
-                    </div>
-                  ))}
+            <Card className="bg-amber-500/5 border-amber-500/10">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle size={16} className="text-amber-400 flex-shrink-0" />
+                  <p className="text-xs text-gray-400 leading-relaxed">
+                    Sugestões baseadas em evidências científicas. Consulte um profissional em caso de alergias ou
+                    condições médicas.
+                  </p>
                 </div>
               </CardContent>
             </Card>

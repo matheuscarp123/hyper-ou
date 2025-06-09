@@ -13,7 +13,13 @@ export default function Home() {
 
   useEffect(() => {
     setIsLoaded(true)
-  }, [])
+
+    // Se já existe um plano completo, redireciona para o dashboard
+    const existingPlan = localStorage.getItem("fitnessProfile")
+    if (existingPlan) {
+      router.push("/dashboard")
+    }
+  }, [router])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 relative overflow-hidden">
