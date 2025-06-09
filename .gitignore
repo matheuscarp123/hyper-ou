@@ -25,3 +25,30 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Capacitor
+android/
+ios/
+.capacitor/
+
+# Chaves de assinatura (NUNCA COMMITAR)
+*.keystore
+*.p12
+*.mobileprovision
+*.certSigningRequest
+
+# Arquivos de configuração sensíveis
+google-services.json
+GoogleService-Info.plist
+
+# Builds
+*.apk
+*.aab
+*.ipa
+
+# Logs
+*.log
+
+# Arquivos de propriedade intelectual
+LICENSE_PRIVATE.md
+SECURITY_KEYS.md

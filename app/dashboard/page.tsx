@@ -11,6 +11,8 @@ import { MacroChart } from "@/components/macro-chart"
 import { WorkoutCard } from "@/components/workout-card"
 import { MealCard } from "@/components/meal-card"
 import { HamburgerMenu } from "@/components/hamburger-menu"
+import { AdBanner } from "@/components/ad-banner"
+import { AdManager } from "@/lib/ads"
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -23,6 +25,16 @@ export default function DashboardPage() {
       setProfile(JSON.parse(storedProfile))
     } else {
       router.push("/onboarding")
+      return
+    }
+
+    // Mostrar anúncio intersticial ocasionalmente
+    const adManager = AdManager.getInstance()
+    if (Math.random() < 0.2) {
+      // 20% de chance
+      setTimeout(() => {
+        adManager.showInterstitial()
+      }, 3000) // Após 3 segundos
     }
   }, [router])
 
@@ -39,6 +51,13 @@ export default function DashboardPage() {
       router.push("/supplements")
     } else {
       setCurrentTab(tab)
+
+      // Mostrar anúncio intersticial ao trocar de aba (ocasionalmente)
+      const adManager = AdManager.getInstance()
+      if (Math.random() < 0.15) {
+        // 15% de chance
+        adManager.showInterstitial()
+      }
     }
   }
 
@@ -124,6 +143,9 @@ export default function DashboardPage() {
             </Card>
           </motion.div>
 
+          {/* Ad Banner */}
+          <AdBanner id="dashboard-banner-top" className="mb-6" />
+
           {/* Content based on current tab */}
           <motion.div
             key={currentTab}
@@ -137,11 +159,15 @@ export default function DashboardPage() {
                   <Dumbbell className="mr-3 text-red-500" size={24} />
                   Seu Treino
                 </h3>
+
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {profile.workout.routine.map((day, index) => (
                     <WorkoutCard key={index} day={day} index={index} />
                   ))}
                 </div>
+
+                {/* Ad Banner after workout cards */}
+                <AdBanner id="workout-banner-bottom" className="mt-8" />
               </div>
             )}
 
@@ -151,6 +177,7 @@ export default function DashboardPage() {
                   <Utensils className="mr-3 text-red-500" size={24} />
                   Sua Dieta
                 </h3>
+
                 <div className="grid lg:grid-cols-3 gap-6">
                   <div className="lg:col-span-1">
                     <MacroChart macros={profile.diet.macros} />
@@ -161,13 +188,16 @@ export default function DashboardPage() {
                     ))}
                   </div>
                 </div>
+
+                {/* Ad Banner after diet content */}
+                <AdBanner id="diet-banner-bottom" className="mt-8" />
               </div>
             )}
           </motion.div>
         </div>
       </div>
 
-      <div className="absolute bottom-4 right-4 text-xs text-gray-600">Créditos: Matheus Carvalho</div>
+      <div className="absolute bottom-4 right-4 text-xs text-gray-600">© 2024 Matheus Carvalho</div>
     </main>
   )
 }

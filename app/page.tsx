@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation"
 import { LogoWithText } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
+import { PremiumManager } from "@/lib/premium"
+import { AdManager } from "@/lib/ads"
 
 export default function Home() {
   const router = useRouter()
@@ -13,6 +15,13 @@ export default function Home() {
 
   useEffect(() => {
     setIsLoaded(true)
+
+    // Inicializar sistemas
+    const premiumManager = PremiumManager.getInstance()
+    const adManager = AdManager.getInstance()
+
+    // Verificar acessos temporários expirados
+    premiumManager.checkTemporaryAccess()
 
     // Se já existe um plano completo, redireciona para o dashboard
     const existingPlan = localStorage.getItem("fitnessProfile")
@@ -57,7 +66,7 @@ export default function Home() {
         </motion.div>
       </motion.div>
 
-      <div className="absolute bottom-4 right-4 text-xs text-gray-600">Créditos: Matheus Carvalho</div>
+      <div className="absolute bottom-4 right-4 text-xs text-gray-600">© 2024 Matheus Carvalho</div>
     </main>
   )
 }
