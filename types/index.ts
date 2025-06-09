@@ -4,6 +4,7 @@ export interface UserProfile {
   height: number
   physique: string
   trainingDays: number
+  gender: "male" | "female"
 }
 
 export interface Exercise {

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowRight } from "lucide-react"
 import type { UserProfile } from "@/types"
 import { PhysiqueCard } from "@/components/physique-card"
@@ -134,7 +133,6 @@ export default function PhysiquePage() {
   const router = useRouter()
   const [userProfile, setUserProfile] = useState<Partial<UserProfile>>({})
   const [selectedPhysique, setSelectedPhysique] = useState<string>("")
-  const [gender, setGender] = useState("male")
   const [category, setCategory] = useState<string>("all")
 
   useEffect(() => {
@@ -161,26 +159,25 @@ export default function PhysiquePage() {
     }
   }
 
-  const filteredPhysiques =
-    gender === "male"
-      ? malePhysiques.filter((p) => category === "all" || p.category === category)
-      : femalePhysiques.filter((p) => category === "all" || p.category === category)
+  // Selecionar físicos baseado no gênero
+  const physiques = userProfile.gender === "female" ? femalePhysiques : malePhysiques
+  const filteredPhysiques = physiques.filter((p) => category === "all" || p.category === category)
 
   const categories = [
     { id: "all", name: "Todos" },
     { id: "bodybuilder", name: "Fisiculturistas" },
     { id: "athlete", name: "Atletas" },
-    { id: "actor", name: "Atores" },
+    { id: "actor", name: "Atores/Atrizes" },
     { id: "model", name: "Modelos" },
     { id: "aesthetic", name: "Estética" },
   ]
 
+  const genderTitle = userProfile.gender === "female" ? "Referências Femininas" : "Referências Masculinas"
+
   return (
     <main className="flex min-h-screen flex-col items-center p-4 pt-8 relative">
-      {/* Background grid pattern */}
+      {/* Background */}
       <div className="absolute inset-0 z-0 bg-black bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-
-      {/* Radial gradient overlay */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,_rgba(220,38,38,0.08)_0%,_rgba(0,0,0,0)_60%)]"></div>
 
       <motion.div
@@ -202,67 +199,42 @@ export default function PhysiquePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <h2 className="text-3xl font-bold mb-2">Escolha sua referência</h2>
+          <h2 className="text-3xl font-bold mb-2">{genderTitle}</h2>
           <p className="text-gray-400 mb-8">Selecione o físico que você deseja alcançar</p>
         </motion.div>
 
-        <Tabs defaultValue="male" className="w-full" onValueChange={(value) => setGender(value)}>
-          <TabsList className="grid w-full max-w-xs grid-cols-2 mb-6">
-            <TabsTrigger value="male">Masculino</TabsTrigger>
-            <TabsTrigger value="female">Feminino</TabsTrigger>
-          </TabsList>
+        <motion.div
+          className="flex flex-wrap gap-2 mb-8"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          {categories.map((cat) => (
+            <Button
+              key={cat.id}
+              variant={category === cat.id ? "default" : "outline"}
+              size="sm"
+              onClick={() => setCategory(cat.id)}
+              className="rounded-full"
+            >
+              {cat.name}
+            </Button>
+          ))}
+        </motion.div>
 
-          <motion.div
-            className="flex flex-wrap gap-2 mb-6"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            {categories.map((cat) => (
-              <Button
-                key={cat.id}
-                variant={category === cat.id ? "default" : "outline"}
-                size="sm"
-                onClick={() => setCategory(cat.id)}
-                className="rounded-full"
-              >
-                {cat.name}
-              </Button>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <AnimatePresence mode="wait">
+            {filteredPhysiques.map((physique, index) => (
+              <PhysiqueCard
+                key={physique.id}
+                physique={physique}
+                isSelected={selectedPhysique === physique.id}
+                onSelect={handleSelectPhysique}
+                index={index}
+              />
             ))}
-          </motion.div>
-
-          <TabsContent value="male" className="mt-0">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <AnimatePresence mode="wait">
-                {filteredPhysiques.map((physique, index) => (
-                  <PhysiqueCard
-                    key={physique.id}
-                    physique={physique}
-                    isSelected={selectedPhysique === physique.id}
-                    onSelect={handleSelectPhysique}
-                    index={index}
-                  />
-                ))}
-              </AnimatePresence>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="female" className="mt-0">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <AnimatePresence mode="wait">
-                {filteredPhysiques.map((physique, index) => (
-                  <PhysiqueCard
-                    key={physique.id}
-                    physique={physique}
-                    isSelected={selectedPhysique === physique.id}
-                    onSelect={handleSelectPhysique}
-                    index={index}
-                  />
-                ))}
-              </AnimatePresence>
-            </div>
-          </TabsContent>
-        </Tabs>
+          </AnimatePresence>
+        </div>
 
         <AnimatePresence>
           {selectedPhysique && (
