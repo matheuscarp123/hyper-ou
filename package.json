@@ -2,17 +2,17 @@
   "name": "hypergym",
   "version": "1.0.0",
   "private": true,
-  "author": "Matheus Carvalho <matheus.carvalho.dev@gmail.com>",
   "description": "HyperGym - Personal Training App by Matheus Carvalho",
+  "homepage": "https://hypergym.vercel.app",
   "license": "PROPRIETARY",
-  "homepage": "https://matheuscarvalho.dev",
+  "author": "Matheus Carvalho <matheus.carvalho.dev@gmail.com>",
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "dev": "next dev",
     "export": "next build",
-    "preview": "next dev"
+    "lint": "next lint",
+    "preview": "next dev",
+    "start": "next start"
   },
   "dependencies": {
     "@capacitor/cli": "latest",
@@ -28,6 +28,7 @@
     "react": "^19",
     "react-dom": "^19",
     "recharts": "latest",
+    "stripe": "latest",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7"
   },

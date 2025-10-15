@@ -238,7 +238,9 @@ export default function SupplementsPage() {
               </div>
               <div>
                 <h2 className="text-3xl font-bold text-white">Suplementos</h2>
-                <p className="text-gray-400">Ranking de prioridade para seus objetivos</p>
+                <p className="text-gray-400">
+                  Ranking de prioridade - <span className="text-green-400 font-bold">100% GRÁTIS</span>
+                </p>
               </div>
             </div>
           </motion.div>

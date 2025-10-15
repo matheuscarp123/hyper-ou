@@ -1,840 +1,903 @@
 import type { UserProfile, Workout } from "@/types"
 
+/**
+ * Gera plano de treino personalizado baseado no perfil do usuário
+ * Ajusta automaticamente o número de dias e a divisão muscular
+ */
 export async function generateWorkoutPlan(userProfile: UserProfile): Promise<Workout> {
-  // Em um app real, isso seria uma chamada para uma API de IA
-  // Aqui estamos simulando a resposta
-  
-  // Esperar um pouco para simular o processamento
-  await new Promise(resolve => setTimeout(resolve, 2000))
-  
-  // Planos específicos baseados na referência de físico
-  const workoutPlans: Record<string, Workout> = {
-    arnold: {
-      routine: [
-        {
-          day: "Dia 1",
-          focus: "Peito e Costas",
-          exercises: [
-            {
-              name: "Supino Reto",
-              sets: "5",
-              reps: "8-12",
-              importance: "Exercício fundamental para desenvolvimento do peitoral, essencial para o volume torácico característico de Arnold."
-            },
-            {
-              name: "Pullover com Halteres",
-              sets: "4",
-              reps: "10-12",
-              importance: "Expande a caixa torácica e trabalha a conexão entre peito e costas, técnica favorita de Arnold."
-            },
-            {
-              name: "Crucifixo Inclinado",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolve a parte superior do peitoral, criando a definição e volume característicos."
-            },
-            {
-              name: "Barra Fixa",
-              sets: "4",
-              reps: "8-12",
-              importance: "Desenvolve a largura das costas, essencial para o formato em V do torso."
-            },
-            {
-              name: "Remada Curvada",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolve a espessura das costas, complementando a largura para o físico completo."
-            }
-          ]
-        },
-        {
-          day: "Dia 2",
-          focus: "Pernas",
-          exercises: [
-            {
-              name: "Agachamento",
-              sets: "5",
-              reps: "8-12",
-              importance: "Exercício fundamental para desenvolvimento completo das pernas e estimulação hormonal."
-            },
-            {
-              name: "Leg Press",
-              sets: "4",
-              reps: "10-15",
-              importance: "Complementa o agachamento para desenvolvimento dos quadríceps."
-            },
-            {
-              name: "Extensão de Pernas",
-              sets: "4",
-              reps: "12-15",
-              importance: "Isolamento dos quadríceps para definição e separação muscular."
-            },
-            {
-              name: "Flexão de Pernas",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolvimento dos isquiotibiais para equilíbrio e proporção."
-            },
-            {
-              name: "Panturrilha em Pé",
-              sets: "5",
-              reps: "15-20",
-              importance: "Desenvolvimento das panturrilhas, ponto fraco de muitos fisiculturistas."
-            }
-          ]
-        },
-        {
-          day: "Dia 3",
-          focus: "Ombros e Braços",
-          exercises: [
-            {
-              name: "Desenvolvimento Militar",
-              sets: "5",
-              reps: "8-12",
-              importance: "Desenvolve os três feixes do deltóide, criando ombros largos e imponentes."
-            },
-            {
-              name: "Elevação Lateral",
-              sets: "4",
-              reps: "10-15",
-              importance: "Isolamento do deltóide lateral, criando a largura característica dos ombros."
-            },
-            {
-              name: "Rosca Direta com Barra",
-              sets: "4",
-              reps: "8-12",
-              importance: "Desenvolvimento dos bíceps, criando o pico característico."
-            },
-            {
-              name: "Rosca Concentrada",
-              sets: "3",
-              reps: "10-12",
-              importance: "Isolamento do bíceps para máximo pico, técnica favorita de Arnold."
-            },
-            {
-              name: "Tríceps Testa",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolvimento da cabeça longa do tríceps para braços volumosos."
-            },
-            {
-              name: "Mergulho entre Bancos",
-              sets: "4",
-              reps: "10-15",
-              importance: "Trabalha todas as cabeças do tríceps para desenvolvimento completo."
-            }
-          ]
-        },
-        {
-          day: "Dia 4",
-          focus: "Peito e Costas",
-          exercises: [
-            {
-              name: "Supino Inclinado",
-              sets: "5",
-              reps: "8-12",
-              importance: "Desenvolve a parte superior do peitoral para o formato completo."
-            },
-            {
-              name: "Crucifixo Reto",
-              sets: "4",
-              reps: "10-12",
-              importance: "Estica as fibras do peitoral para máximo desenvolvimento."
-            },
-            {
-              name: "Puxada Frontal",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolve a largura do dorsal, complementando a barra fixa."
-            },
-            {
-              name: "Remada Unilateral",
-              sets: "4",
-              reps: "10-12",
-              importance: "Trabalha cada lado independentemente para corrigir desequilíbrios."
-            },
-            {
-              name: "Encolhimento de Ombros",
-              sets: "4",
-              reps: "12-15",
-              importance: "Desenvolve os trapézios para completar o visual das costas."
-            }
-          ]
-        },
-        {
-          day: "Dia 5",
-          focus: "Pernas e Abdômen",
-          exercises: [
-            {
-              name: "Agachamento Frontal",
-              sets: "4",
-              reps: "8-12",
-              importance: "Variação que enfatiza os quadríceps para desenvolvimento completo."
-            },
-            {
-              name: "Stiff",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolvimento dos isquiotibiais e glúteos."
-            },
-            {
-              name: "Avanço",
-              sets: "3",
-              reps: "10-12 (cada perna)",
-              importance: "Trabalha as pernas unilateralmente para equilíbrio e definição."
-            },
-            {
-              name: "Elevação de Panturrilha Sentado",
-              sets: "4",
-              reps: "15-20",
-              importance: "Enfatiza a parte interna da panturrilha para desenvolvimento completo."
-            },
-            {
-              name: "Abdominal Crunch",
-              sets: "4",
-              reps: "15-20",
-              importance: "Desenvolve o reto abdominal para definição do abdômen."
-            },
-            {
-              name: "Elevação de Pernas",
-              sets: "4",
-              reps: "15-20",
-              importance: "Trabalha o abdômen inferior para desenvolvimento completo."
-            }
-          ]
-        }
-      ]
-    },
-    cbum: {
-      routine: [
-        {
-          day: "Dia 1",
-          focus: "Peito e Tríceps",
-          exercises: [
-            {
-              name: "Supino Inclinado com Halteres",
-              sets: "4",
-              reps: "8-10",
-              importance: "Desenvolve a parte superior do peitoral, criando a estética do Classic Physique."
-            },
-            {
-              name: "Supino Reto",
-              sets: "4",
-              reps: "8-12",
-              importance: "Constrói a base do peitoral para o visual amplo e cheio."
-            },
-            {
-              name: "Crucifixo na Máquina",
-              sets: "3",
-              reps: "10-15",
-              importance: "Isolamento para máxima contração e definição do peitoral."
-            },
-            {
-              name: "Tríceps na Polia",
-              sets: "4",
-              reps: "10-15",
-              importance: "Mantém tensão constante para desenvolvimento dos tríceps."
-            },
-            {
-              name: "Extensão de Tríceps Deitado",
-              sets: "3",
-              reps: "10-12",
-              importance: "Enfatiza a cabeça longa do tríceps para braços completos."
-            }
-          ]
-        },
-        {
-          day: "Dia 2",
-          focus: "Costas e Bíceps",
-          exercises: [
-            {
-              name: "Puxada Frontal",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolve a largura do dorsal para o formato em V característico."
-            },
-            {
-              name: "Remada Baixa",
-              sets: "4",
-              reps: "10-12",
-              importance: "Trabalha a espessura das costas para o visual tridimensional."
-            },
-            {
-              name: "Pullover na Máquina",
-              sets: "3",
-              reps: "12-15",
-              importance: "Expande a caixa torácica e trabalha a conexão entre costas e peito."
-            },
-            {
-              name: "Rosca Scott",
-              sets: "4",
-              reps: "10-12",
-              importance: "Isola o bíceps para máximo desenvolvimento e pico."
-            },
-            {
-              name: "Rosca Martelo",
-              sets: "3",
-              reps: "10-12",
-              importance: "Desenvolve o braquial e o bíceps para braços mais grossos."
-            }
-          ]
-        },
-        {
-          day: "Dia 3",
-          focus: "Pernas",
-          exercises: [
-            {
-              name: "Hack Squat",
-              sets: "4",
-              reps: "8-12",
-              importance: "Enfatiza os quadríceps mantendo a postura adequada."
-            },
-            {
-              name: "Leg Press",
-              sets: "4",
-              reps: "10-15",
-              importance: "Permite trabalhar com cargas pesadas para hipertrofia máxima."
-            },
-            {
-              name: "Cadeira Extensora",
-              sets: "3",
-              reps: "12-15",
-              importance: "Isolamento dos quadríceps para definição e separação muscular."
-            },
-            {
-              name: "Mesa Flexora",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolvimento dos isquiotibiais para equilíbrio e proporção."
-            },
-            {
-              name: "Elevação de Panturrilha em Pé",
-              sets: "5",
-              reps: "15-20",
-              importance: "Desenvolvimento das panturrilhas para completar o visual das pernas."
-            }
-          ]
-        },
-        {
-          day: "Dia 4",
-          focus: "Ombros e Abdômen",
-          exercises: [
-            {
-              name: "Press Arnold",
-              sets: "4",
-              reps: "10-12",
-              importance: "Trabalha todos os feixes do deltóide com rotação para maior ativação."
-            },
-            {
-              name: "Elevação Lateral",
-              sets: "4",
-              reps: "12-15",
-              importance: "Desenvolve o deltóide lateral para ombros largos e redondos."
-            },
-            {
-              name: "Elevação Frontal",
-              sets: "3",
-              reps: "12-15",
-              importance: "Trabalha o deltóide anterior para desenvolvimento completo."
-            },
-            {
-              name: "Face Pull",
-              sets: "3",
-              reps: "15-20",
-              importance: "Fortalece os rotadores externos e deltóide posterior para equilíbrio."
-            },
-            {
-              name: "Abdominal no Cabo",
-              sets: "4",
-              reps: "15-20",
-              importance: "Mantém tensão constante para máxima ativação abdominal."
-            }
-          ]
-        },
-        {
-          day: "Dia 5",
-          focus: "Treino de Fraquezas",
-          exercises: [
-            {
-              name: "Agachamento Búlgaro",
-              sets: "3",
-              reps: "10-12 (cada perna)",
-              importance: "Corrige desequilíbrios entre as pernas e desenvolve os glúteos."
-            },
-            {
-              name: "Desenvolvimento com Halteres",
-              sets: "3",
-              reps: "10-12",
-              importance: "Trabalha cada ombro independentemente para corrigir assimetrias."
-            },
-            {
-              name: "Crucifixo Inclinado",
-              sets: "3",
-              reps: "12-15",
-              importance: "Enfatiza a parte superior do peitoral para proporção ideal."
-            },
-            {
-              name: "Rosca 21s",
-              sets: "3",
-              reps: "21",
-              importance: "Trabalha o bíceps em diferentes ângulos para desenvolvimento completo."
-            },
-            {
-              name: "Prancha",
-              sets: "3",
-              reps: "60 segundos",
-              importance: "Fortalece o core para estabilidade e postura."
-            }
-          ]
-        }
-      ]
-    },
-    ramon: {
-      routine: [
-        {
-          day: "Dia 1",
-          focus: "Costas e Bíceps",
-          exercises: [
-            {
-              name: "Puxada Aberta",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolve a largura do dorsal para o V-taper característico de Ramon."
-            },
-            {
-              name: "Remada Curvada",
-              sets: "4",
-              reps: "8-10",
-              importance: "Constrói a espessura das costas para o visual denso e detalhado."
-            },
-            {
-              name: "Pullover com Corda",
-              sets: "3",
-              reps: "12-15",
-              importance: "Trabalha a conexão entre costas e peito para fluidez muscular."
-            },
-            {
-              name: "Rosca Alternada",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolve os bíceps com ênfase na supinação para pico máximo."
-            },
-            {
-              name: "Rosca Concentrada",
-              sets: "3",
-              reps: "12-15",
-              importance: "Isolamento para máximo pico do bíceps, característica estética importante."
-            }
-          ]
-        },
-        {
-          day: "Dia 2",
-          focus: "Pernas",
-          exercises: [
-            {
-              name: "Agachamento",
-              sets: "4",
-              reps: "8-10",
-              importance: "Base para o desenvolvimento completo das pernas, mantendo proporção."
-            },
-            {
-              name: "Leg Press",
-              sets: "4",
-              reps: "10-15",
-              importance: "Permite trabalhar com cargas pesadas para hipertrofia máxima."
-            },
-            {
-              name: "Cadeira Extensora",
-              sets: "3",
-              reps: "15-20",
-              importance: "Isolamento para definição e separação dos quadríceps."
-            },
-            {
-              name: "Stiff",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolvimento dos isquiotibiais para equilíbrio e proporção."
-            },
-            {
-              name: "Panturrilha em Pé",
-              sets: "5",
-              reps: "15-20",
-              importance: "Desenvolvimento das panturrilhas para completar o visual das pernas."
-            }
-          ]
-        },
-        {
-          day: "Dia 3",
-          focus: "Peito e Tríceps",
-          exercises: [
-            {
-              name: "Supino Inclinado",
-              sets: "4",
-              reps: "8-10",
-              importance: "Desenvolve a parte superior do peitoral para o visual estético."
-            },
-            {
-              name: "Crucifixo com Cabos",
-              sets: "4",
-              reps: "12-15",
-              importance: "Mantém tensão constante para máxima ativação e definição."
-            },
-            {
-              name: "Supino Declinado",
-              sets: "3",
-              reps: "10-12",
-              importance: "Completa o desenvolvimento do peitoral inferior."
-            },
-            {
-              name: "Tríceps Corda",
-              sets: "4",
-              reps: "12-15",
-              importance: "Trabalha todas as cabeças do tríceps com ênfase na definição."
-            },
-            {
-              name: "Tríceps Francês",
-              sets: "3",
-              reps: "10-12",
-              importance: "Isolamento da cabeça longa para braços completos e definidos."
-            }
-          ]
-        },
-        {
-          day: "Dia 4",
-          focus: "Ombros e Abdômen",
-          exercises: [
-            {
-              name: "Desenvolvimento com Halteres",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolve os deltóides de forma equilibrada para ombros redondos."
-            },
-            {
-              name: "Elevação Lateral",
-              sets: "4",
-              reps: "12-15",
-              importance: "Cria a largura dos ombros característica do físico de Ramon."
-            },
-            {
-              name: "Elevação Posterior",
-              sets: "3",
-              reps: "12-15",
-              importance: "Equilibra o desenvolvimento posterior para visual completo."
-            },
-            {
-              name: "Abdominal Declinado",
-              sets: "4",
-              reps: "15-20",
-              importance: "Desenvolve o reto abdominal para definição do six-pack."
-            },
-            {
-              name: "Abdominal Oblíquo",
-              sets: "3",
-              reps: "15-20 (cada lado)",
-              importance: "Trabalha a cintura para o visual estético e proporcionado."
-            }
-          ]
-        },
-        {
-          day: "Dia 5",
-          focus: "Pernas e Braços",
-          exercises: [
-            {
-              name: "Agachamento Hack",
-              sets: "4",
-              reps: "10-12",
-              importance: "Enfatiza os quadríceps para desenvolvimento detalhado."
-            },
-            {
-              name: "Cadeira Flexora",
-              sets: "4",
-              reps: "12-15",
-              importance: "Isolamento dos isquiotibiais para equilíbrio posterior."
-            },
-            {
-              name: "Rosca Scott",
-              sets: "3",
-              reps: "10-12",
-              importance: "Desenvolve o bíceps com ênfase na parte inferior."
-            },
-            {
-              name: "Mergulho",
-              sets: "4",
-              reps: "10-15",
-              importance: "Trabalha o tríceps com o peso corporal para definição."
-            },
-            {
-              name: "Panturrilha Sentado",
-              sets: "4",
-              reps: "15-20",
-              importance: "Enfatiza o sóleo para desenvolvimento completo da panturrilha."
-            }
-          ]
-        }
-      ]
-    },
-    zyzz: {
-      routine: [
-        {
-          day: "Dia 1",
-          focus: "Peito e Tríceps",
-          exercises: [
-            {
-              name: "Supino Inclinado",
-              sets: "4",
-              reps: "8-10",
-              importance: "Desenvolve a parte superior do peitoral para o visual estético de Zyzz."
-            },
-            {
-              name: "Supino com Halteres",
-              sets: "4",
-              reps: "10-12",
-              importance: "Permite maior amplitude de movimento para desenvolvimento completo."
-            },
-            {
-              name: "Crossover",
-              sets: "3",
-              reps: "12-15",
-              importance: "Isolamento para máxima contração e definição do peitoral."
-            },
-            {
-              name: "Tríceps Corda",
-              sets: "4",
-              reps: "12-15",
-              importance: "Trabalha todas as cabeças do tríceps com ênfase na definição."
-            },
-            {
-              name: "Tríceps Testa",
-              sets: "3",
-              reps: "10-12",
-              importance: "Isolamento da cabeça longa para braços definidos."
-            }
-          ]
-        },
-        {
-          day: "Dia 2",
-          focus: "Costas e Bíceps",
-          exercises: [
-            {
-              name: "Barra Fixa",
-              sets: "4",
-              reps: "Máximo",
-              importance: "Desenvolve a largura do dorsal para o V-taper estético."
-            },
-            {
-              name: "Remada Curvada",
-              sets: "4",
-              reps: "10-12",
-              importance: "Constrói a espessura das costas para o visual completo."
-            },
-            {
-              name: "Puxada Neutra",
-              sets: "3",
-              reps: "10-12",
-              importance: "Trabalha o dorsal com ênfase na parte inferior."
-            },
-            {
-              name: "Rosca Barra W",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolve os bíceps com ênfase no pico para o visual estético."
-            },
-            {
-              name: "Rosca Martelo",
-              sets: "3",
-              reps: "12-15",
-              importance: "Trabalha o braquial e bíceps para braços mais grossos."
-            }
-          ]
-        },
-        {
-          day: "Dia 3",
-          focus: "Pernas",
-          exercises: [
-            {
-              name: "Agachamento",
-              sets: "4",
-              reps: "8-10",
-              importance: "Base para o desenvolvimento completo das pernas, mantendo proporção."
-            },
-            {
-              name: "Leg Press",
-              sets: "4",
-              reps: "12-15",
-              importance: "Permite trabalhar com cargas pesadas para hipertrofia máxima."
-            },
-            {
-              name: "Cadeira Extensora",
-              sets: "3",
-              reps: "15-20",
-              importance: "Isolamento para definição e separação dos quadríceps."
-            },
-            {
-              name: "Mesa Flexora",
-              sets: "4",
-              reps: "12-15",
-              importance: "Desenvolvimento dos isquiotibiais para equilíbrio e proporção."
-            },
-            {
-              name: "Panturrilha em Pé",
-              sets: "5",
-              reps: "15-20",
-              importance: "Desenvolvimento das panturrilhas para completar o visual estético."
-            }
-          ]
-        },
-        {
-          day: "Dia 4",
-          focus: "Ombros e Abdômen",
-          exercises: [
-            {
-              name: "Desenvolvimento Militar",
-              sets: "4",
-              reps: "8-10",
-              importance: "Desenvolve todos os feixes do deltóide para ombros largos."
-            },
-            {
-              name: "Elevação Lateral",
-              sets: "4",
-              reps: "12-15",
-              importance: "Cria a largura dos ombros característica do físico de Zyzz."
-            },
-            {
-              name: "Elevação Frontal",
-              sets: "3",
-              reps: "12-15",
-              importance: "Completa o desenvolvimento anterior para visual equilibrado."
-            },
-            {
-              name: "Abdominal Declinado",
-              sets: "4",
-              reps: "15-20",
-              importance: "Desenvolve o reto abdominal para definição do six-pack."
-            },
-            {
-              name: "Prancha Lateral",
-              sets: "3",
-              reps: "30-60 segundos (cada lado)",
-              importance: "Trabalha os oblíquos para a cintura definida característica."
-            }
-          ]
-        },
-        {
-          day: "Dia 5",
-          focus: "Braços e Cardio",
-          exercises: [
-            {
-              name: "Rosca Scott",
-              sets: "4",
-              reps: "10-12",
-              importance: "Isola o bíceps para máximo desenvolvimento e pico."
-            },
-            {
-              name: "Rosca Concentrada",
-              sets: "3",
-              reps: "12-15",
-              importance: "Isolamento para máximo pico do bíceps, característica estética importante."
-            },
-            {
-              name: "Tríceps Mergulho",
-              sets: "4",
-              reps: "Máximo",
-              importance: "Trabalha todas as cabeças do tríceps com o peso corporal."
-            },
-            {
-              name: "Tríceps Unilateral",
-              sets: "3",
-              reps: "12-15",
-              importance: "Trabalha cada braço independentemente para corrigir assimetrias."
-            },
-            {
-              name: "HIIT na Esteira",
-              sets: "10",
-              reps: "30s sprint / 30s descanso",
-              importance: "Cardio de alta intensidade para definição sem perder massa muscular."
-            }
-          ]
-        }
-      ]
-    },
-    wellness: {
-      routine: [
-        {
-          day: "Dia 1",
-          focus: "Glúteos e Posterior de Coxa",
-          exercises: [
-            {
-              name: "Hip Thrust",
-              sets: "5",
-              reps: "10-12",
-              importance: "Exercício principal para desenvolvimento dos glúteos, foco da categoria Wellness."
-            },
-            {
-              name: "Stiff",
-              sets: "4",
-              reps: "10-12",
-              importance: "Trabalha isquiotibiais e glúteos simultaneamente para desenvolvimento posterior."
-            },
-            {
-              name: "Elevação Pélvica",
-              sets: "3",
-              reps: "15-20",
-              importance: "Isolamento dos glúteos para máxima ativação e hipertrofia."
-            },
-            {
-              name: "Mesa Flexora",
-              sets: "4",
-              reps: "12-15",
-              importance: "Isolamento dos isquiotibiais para equilíbrio e proporção."
-            },
-            {
-              name: "Abdução de Quadril",
-              sets: "4",
-              reps: "15-20",
-              importance: "Trabalha os glúteos médio e mínimo para o formato arredondado."
-            }
-          ]
-        },
-        {
-          day: "Dia 2",
-          focus: "Costas e Ombros",
-          exercises: [
-            {
-              name: "Puxada Frontal",
-              sets: "4",
-              reps: "10-12",
-              importance: "Desenvolve a largura do dorsal para o V-taper que contrasta com os quadris."
-            },
-            {
-              name: "Remada Baixa",
-              sets: "4",
-              reps: "12-15",
-              importance: "Trabalha a espessura das costas para o visual tridimensional."
-            },
-            {
-              name: "Elevação Lateral",
-              sets: "4",
-              reps: "12-15",
-              importance: "Desenvolve os deltóides laterais para equilibrar a proporção com os quadris."
-            },
-            {
-              name: "Face Pull",
-              sets: "3",
-              reps: "15-20",
-              importance: "Fortalece a postura e desenvolve os deltóides posteriores."
-            },
-            {
-              name: "Encolhimento",
-              sets: "3",
-              reps: "15-20",
-              importance: "Desenvolve os trapézios para completar o visual superior."
-            }
-          ]
-        },
-        {
-          day: "Dia 3",
-          focus: "Quadríceps",
-          exercises: [
-            {
-              name: "Agachamento",
-              sets: "\
+  // Simular tempo de processamento
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+
+  const { trainingDays = 3 } = userProfile
+
+  // Definir divisões de treino baseadas nos dias disponíveis
+  const workoutSplits: Record<number, Workout> = {
+    2: generate2DaySplit(),
+    3: generate3DaySplit(),
+    4: generate4DaySplit(),
+    5: generate5DaySplit(),
+    6: generate6DaySplit(),
+  }
+
+  // Retornar o plano apropriado ou usar o de 3 dias como padrão
+  return workoutSplits[trainingDays] || workoutSplits[3]
+}
+
+// Plano de 2 dias - Full Body
+function generate2DaySplit(): Workout {
+  return {
+    split: "Full Body 2x",
+    routine: [
+      {
+        day: "Dia 1",
+        focus: "Full Body A",
+        exercises: [
+          {
+            name: "Agachamento",
+            sets: "4",
+            reps: "8-12",
+            importance: "Exercício fundamental para desenvolvimento completo das pernas",
+            technique: "Mantenha o peito erguido e desça até que as coxas fiquem paralelas ao solo.",
+          },
+          {
+            name: "Supino Reto",
+            sets: "4",
+            reps: "8-12",
+            importance: "Base para desenvolvimento do peitoral",
+            technique: "Mantenha os cotovelos em ângulo de 45° e desça a barra até tocar o peito.",
+          },
+          {
+            name: "Remada Curvada",
+            sets: "4",
+            reps: "10-12",
+            importance: "Desenvolve a espessura das costas",
+            technique: "Mantenha as costas paralelas ao solo e puxe o peso em direção ao umbigo.",
+          },
+          {
+            name: "Desenvolvimento Militar",
+            sets: "3",
+            reps: "10-12",
+            importance: "Desenvolve os três feixes do deltóide",
+            technique: "Mantenha o core contraído e não arqueie as costas.",
+          },
+          {
+            name: "Rosca Direta",
+            sets: "3",
+            reps: "10-12",
+            importance: "Desenvolvimento dos bíceps",
+            technique: "Mantenha os cotovelos junto ao corpo.",
+          },
+        ],
+      },
+      {
+        day: "Dia 2",
+        focus: "Full Body B",
+        exercises: [
+          {
+            name: "Leg Press",
+            sets: "4",
+            reps: "10-15",
+            importance: "Complementa o agachamento para desenvolvimento dos quadríceps",
+            technique: "Posicione os pés na parte superior da plataforma.",
+          },
+          {
+            name: "Supino Inclinado",
+            sets: "4",
+            reps: "8-12",
+            importance: "Desenvolve a parte superior do peitoral",
+            technique: "Use um ângulo de 30° para máxima ativação.",
+          },
+          {
+            name: "Puxada Frontal",
+            sets: "4",
+            reps: "10-12",
+            importance: "Trabalha o dorsal com ênfase na largura",
+            technique: "Puxe a barra até a altura do peito.",
+          },
+          {
+            name: "Elevação Lateral",
+            sets: "3",
+            reps: "12-15",
+            importance: "Isolamento do deltóide lateral",
+            technique: "Eleve os braços até a altura dos ombros.",
+          },
+          {
+            name: "Tríceps na Polia",
+            sets: "3",
+            reps: "12-15",
+            importance: "Desenvolvimento dos tríceps",
+            technique: "Mantenha os cotovelos fixos próximos ao corpo.",
+          },
+        ],
+      },
+    ],
+  }
+}
+
+// Plano de 3 dias - ABC
+function generate3DaySplit(): Workout {
+  return {
+    split: "ABC (Corpo dividido em 3)",
+    routine: [
+      {
+        day: "Dia A",
+        focus: "Peito e Tríceps",
+        exercises: [
+          {
+            name: "Supino Reto",
+            sets: "4",
+            reps: "8-12",
+            importance: "Exercício fundamental para desenvolvimento do peitoral",
+            technique: "Mantenha os cotovelos em ângulo de 45° em relação ao corpo.",
+          },
+          {
+            name: "Supino Inclinado",
+            sets: "3",
+            reps: "8-12",
+            importance: "Desenvolve a parte superior do peitoral",
+            technique: "Use um ângulo de 30° para máxima ativação.",
+          },
+          {
+            name: "Crucifixo",
+            sets: "3",
+            reps: "10-12",
+            importance: "Isola o peitoral e proporciona maior amplitude",
+            technique: "Mantenha um leve dobramento nos cotovelos.",
+          },
+          {
+            name: "Tríceps Testa",
+            sets: "3",
+            reps: "10-12",
+            importance: "Desenvolve a cabeça longa do tríceps",
+            technique: "Mantenha os cotovelos apontados para cima.",
+          },
+          {
+            name: "Tríceps Corda",
+            sets: "3",
+            reps: "12-15",
+            importance: "Permite maior supinação no final do movimento",
+            technique: "Abra as cordas para os lados no final.",
+          },
+        ],
+      },
+      {
+        day: "Dia B",
+        focus: "Costas e Bíceps",
+        exercises: [
+          {
+            name: "Barra Fixa",
+            sets: "4",
+            reps: "Máximo",
+            importance: "Desenvolve a largura das costas",
+            technique: "Use uma pegada mais larga que os ombros.",
+          },
+          {
+            name: "Remada Curvada",
+            sets: "4",
+            reps: "10-12",
+            importance: "Desenvolve a espessura das costas",
+            technique: "Mantenha as costas paralelas ao solo.",
+          },
+          {
+            name: "Puxada Frontal",
+            sets: "3",
+            reps: "10-12",
+            importance: "Trabalha o dorsal com ênfase na largura",
+            technique: "Puxe a barra até a altura do peito.",
+          },
+          {
+            name: "Rosca Direta",
+            sets: "4",
+            reps: "8-12",
+            importance: "Exercício básico para desenvolvimento dos bíceps",
+            technique: "Mantenha os cotovelos junto ao corpo.",
+          },
+          {
+            name: "Rosca Martelo",
+            sets: "3",
+            reps: "12-15",
+            importance: "Trabalha o braquial e bíceps",
+            technique: "Mantenha os punhos neutros durante todo o movimento.",
+          },
+        ],
+      },
+      {
+        day: "Dia C",
+        focus: "Pernas e Ombros",
+        exercises: [
+          {
+            name: "Agachamento",
+            sets: "4",
+            reps: "8-12",
+            importance: "Exercício fundamental para desenvolvimento completo das pernas",
+            technique: "Mantenha o peito erguido e desça até as coxas ficarem paralelas.",
+          },
+          {
+            name: "Leg Press",
+            sets: "3",
+            reps: "10-15",
+            importance: "Complementa o agachamento para desenvolvimento dos quadríceps",
+            technique: "Posicione os pés na parte superior da plataforma.",
+          },
+          {
+            name: "Desenvolvimento Militar",
+            sets: "4",
+            reps: "8-12",
+            importance: "Desenvolve os três feixes do deltóide",
+            technique: "Mantenha o core contraído e não arqueie as costas.",
+          },
+          {
+            name: "Elevação Lateral",
+            sets: "4",
+            reps: "12-15",
+            importance: "Isolamento do deltóide lateral",
+            technique: "Eleve os braços até a altura dos ombros.",
+          },
+          {
+            name: "Panturrilha em Pé",
+            sets: "4",
+            reps: "15-20",
+            importance: "Desenvolvimento das panturrilhas",
+            technique: "Eleve-se o mais alto possível e segure por 1 segundo no topo.",
+          },
+        ],
+      },
+    ],
+  }
+}
+
+// Plano de 4 dias - Upper/Lower
+function generate4DaySplit(): Workout {
+  return {
+    split: "Upper/Lower 2x",
+    routine: [
+      {
+        day: "Dia 1",
+        focus: "Superiores A (Peito e Costas)",
+        exercises: [
+          {
+            name: "Supino Reto",
+            sets: "4",
+            reps: "8-10",
+            importance: "Exercício fundamental para desenvolvimento do peitoral",
+            technique: "Mantenha os cotovelos em ângulo de 45°.",
+          },
+          {
+            name: "Remada Curvada",
+            sets: "4",
+            reps: "8-10",
+            importance: "Desenvolve a espessura das costas",
+            technique: "Puxe o peso em direção ao umbigo.",
+          },
+          {
+            name: "Supino Inclinado",
+            sets: "3",
+            reps: "10-12",
+            importance: "Desenvolve a parte superior do peitoral",
+            technique: "Use um ângulo de 30°.",
+          },
+          {
+            name: "Puxada Frontal",
+            sets: "3",
+            reps: "10-12",
+            importance: "Trabalha o dorsal com ênfase na largura",
+            technique: "Puxe a barra até a altura do peito.",
+          },
+          {
+            name: "Crucifixo",
+            sets: "3",
+            reps: "12-15",
+            importance: "Isolamento do peitoral",
+            technique: "Mantenha um leve dobramento nos cotovelos.",
+          },
+        ],
+      },
+      {
+        day: "Dia 2",
+        focus: "Inferiores A",
+        exercises: [
+          {
+            name: "Agachamento",
+            sets: "4",
+            reps: "6-10",
+            importance: "Exercício fundamental para desenvolvimento completo das pernas",
+            technique: "Mantenha o peito erguido.",
+          },
+          {
+            name: "Leg Press",
+            sets: "4",
+            reps: "10-15",
+            importance: "Complementa o agachamento",
+            technique: "Posicione os pés na parte superior da plataforma.",
+          },
+          {
+            name: "Cadeira Extensora",
+            sets: "3",
+            reps: "12-15",
+            importance: "Isolamento dos quadríceps",
+            technique: "Contraia o músculo no topo do movimento.",
+          },
+          {
+            name: "Mesa Flexora",
+            sets: "3",
+            reps: "12-15",
+            importance: "Desenvolvimento dos isquiotibiais",
+            technique: "Evite arqueamento excessivo das costas.",
+          },
+          {
+            name: "Panturrilha em Pé",
+            sets: "4",
+            reps: "15-20",
+            importance: "Desenvolvimento das panturrilhas",
+            technique: "Eleve-se o mais alto possível.",
+          },
+        ],
+      },
+      {
+        day: "Dia 3",
+        focus: "Superiores B (Ombros e Braços)",
+        exercises: [
+          {
+            name: "Desenvolvimento Militar",
+            sets: "4",
+            reps: "8-10",
+            importance: "Desenvolve os três feixes do deltóide",
+            technique: "Mantenha o core contraído.",
+          },
+          {
+            name: "Elevação Lateral",
+            sets: "4",
+            reps: "12-15",
+            importance: "Isolamento do deltóide lateral",
+            technique: "Eleve os braços até a altura dos ombros.",
+          },
+          {
+            name: "Rosca Direta",
+            sets: "4",
+            reps: "10-12",
+            importance: "Desenvolvimento dos bíceps",
+            technique: "Mantenha os cotovelos junto ao corpo.",
+          },
+          {
+            name: "Tríceps Testa",
+            sets: "4",
+            reps: "10-12",
+            importance: "Desenvolve a cabeça longa do tríceps",
+            technique: "Mantenha os cotovelos apontados para cima.",
+          },
+          {
+            name: "Rosca Martelo",
+            sets: "3",
+            reps: "12-15",
+            importance: "Trabalha o braquial e bíceps",
+            technique: "Mantenha os punhos neutros.",
+          },
+        ],
+      },
+      {
+        day: "Dia 4",
+        focus: "Inferiores B",
+        exercises: [
+          {
+            name: "Agachamento Frontal",
+            sets: "4",
+            reps: "8-12",
+            importance: "Variação que enfatiza os quadríceps",
+            technique: "Mantenha o tronco mais ereto.",
+          },
+          {
+            name: "Stiff",
+            sets: "4",
+            reps: "10-12",
+            importance: "Desenvolvimento dos isquiotibiais e glúteos",
+            technique: "Mantenha as pernas levemente flexionadas.",
+          },
+          {
+            name: "Avanço",
+            sets: "3",
+            reps: "10-12 (cada perna)",
+            importance: "Trabalha as pernas unilateralmente",
+            technique: "Mantenha o joelho alinhado com o pé.",
+          },
+          {
+            name: "Cadeira Abdutora",
+            sets: "3",
+            reps: "15-20",
+            importance: "Isolamento dos glúteos médio e mínimo",
+            technique: "Controle o movimento de volta.",
+          },
+          {
+            name: "Panturrilha Sentado",
+            sets: "4",
+            reps: "15-20",
+            importance: "Enfatiza o sóleo",
+            technique: "Pausa de 1 segundo no topo.",
+          },
+        ],
+      },
+    ],
+  }
+}
+
+// Plano de 5 dias - ABCDE
+function generate5DaySplit(): Workout {
+  return {
+    split: "ABCDE (5 grupos musculares)",
+    routine: [
+      {
+        day: "Dia 1",
+        focus: "Peito",
+        exercises: [
+          {
+            name: "Supino Reto",
+            sets: "5",
+            reps: "8-12",
+            importance: "Exercício fundamental para desenvolvimento do peitoral",
+            technique: "Mantenha os cotovelos em ângulo de 45°.",
+          },
+          {
+            name: "Supino Inclinado",
+            sets: "4",
+            reps: "8-12",
+            importance: "Desenvolve a parte superior do peitoral",
+            technique: "Use um ângulo de 30°.",
+          },
+          {
+            name: "Crucifixo Inclinado",
+            sets: "3",
+            reps: "10-15",
+            importance: "Isolamento do peitoral superior",
+            technique: "Mantenha um leve dobramento nos cotovelos.",
+          },
+          {
+            name: "Crossover",
+            sets: "3",
+            reps: "12-15",
+            importance: "Isolamento para máxima contração",
+            technique: "Cruze as mãos na frente do corpo.",
+          },
+          {
+            name: "Flexão de Braço",
+            sets: "3",
+            reps: "Máximo",
+            importance: "Finalização com peso corporal",
+            technique: "Mantenha o corpo reto.",
+          },
+        ],
+      },
+      {
+        day: "Dia 2",
+        focus: "Costas",
+        exercises: [
+          {
+            name: "Barra Fixa",
+            sets: "5",
+            reps: "Máximo",
+            importance: "Desenvolve a largura das costas",
+            technique: "Use uma pegada mais larga que os ombros.",
+          },
+          {
+            name: "Remada Curvada",
+            sets: "4",
+            reps: "8-12",
+            importance: "Desenvolve a espessura das costas",
+            technique: "Mantenha as costas paralelas ao solo.",
+          },
+          {
+            name: "Puxada Frontal",
+            sets: "4",
+            reps: "10-12",
+            importance: "Trabalha o dorsal",
+            technique: "Puxe a barra até a altura do peito.",
+          },
+          {
+            name: "Remada Baixa",
+            sets: "3",
+            reps: "10-12",
+            importance: "Trabalha a região média das costas",
+            technique: "Puxe em direção ao abdômen.",
+          },
+          {
+            name: "Pullover",
+            sets: "3",
+            reps: "12-15",
+            importance: "Expande a caixa torácica",
+            technique: "Mantenha os cotovelos levemente flexionados.",
+          },
+        ],
+      },
+      {
+        day: "Dia 3",
+        focus: "Ombros",
+        exercises: [
+          {
+            name: "Desenvolvimento Militar",
+            sets: "5",
+            reps: "8-12",
+            importance: "Desenvolve os três feixes do deltóide",
+            technique: "Mantenha o core contraído.",
+          },
+          {
+            name: "Elevação Lateral",
+            sets: "4",
+            reps: "12-15",
+            importance: "Isolamento do deltóide lateral",
+            technique: "Eleve os braços até a altura dos ombros.",
+          },
+          {
+            name: "Elevação Frontal",
+            sets: "3",
+            reps: "12-15",
+            importance: "Trabalha o deltóide anterior",
+            technique: "Mantenha os cotovelos levemente flexionados.",
+          },
+          {
+            name: "Elevação Posterior",
+            sets: "4",
+            reps: "12-15",
+            importance: "Desenvolve o deltóide posterior",
+            technique: "Incline o tronco para frente.",
+          },
+          {
+            name: "Encolhimento",
+            sets: "4",
+            reps: "12-15",
+            importance: "Desenvolve os trapézios",
+            technique: "Eleve os ombros em direção às orelhas.",
+          },
+        ],
+      },
+      {
+        day: "Dia 4",
+        focus: "Braços",
+        exercises: [
+          {
+            name: "Rosca Direta",
+            sets: "4",
+            reps: "8-12",
+            importance: "Desenvolvimento dos bíceps",
+            technique: "Mantenha os cotovelos junto ao corpo.",
+          },
+          {
+            name: "Tríceps Testa",
+            sets: "4",
+            reps: "8-12",
+            importance: "Desenvolve a cabeça longa do tríceps",
+            technique: "Mantenha os cotovelos apontados para cima.",
+          },
+          {
+            name: "Rosca Martelo",
+            sets: "3",
+            reps: "10-12",
+            importance: "Trabalha o braquial e bíceps",
+            technique: "Mantenha os punhos neutros.",
+          },
+          {
+            name: "Tríceps na Polia",
+            sets: "3",
+            reps: "12-15",
+            importance: "Isolamento dos tríceps",
+            technique: "Mantenha os cotovelos fixos.",
+          },
+          {
+            name: "Rosca Scott",
+            sets: "3",
+            reps: "10-12",
+            importance: "Isola o bíceps",
+            technique: "Mantenha os cotovelos apoiados.",
+          },
+          {
+            name: "Mergulho",
+            sets: "3",
+            reps: "Máximo",
+            importance: "Trabalha todas as cabeças do tríceps",
+            technique: "Incline o corpo para frente.",
+          },
+        ],
+      },
+      {
+        day: "Dia 5",
+        focus: "Pernas",
+        exercises: [
+          {
+            name: "Agachamento",
+            sets: "5",
+            reps: "8-12",
+            importance: "Exercício fundamental para desenvolvimento das pernas",
+            technique: "Mantenha o peito erguido.",
+          },
+          {
+            name: "Leg Press",
+            sets: "4",
+            reps: "10-15",
+            importance: "Complementa o agachamento",
+            technique: "Posicione os pés na parte superior da plataforma.",
+          },
+          {
+            name: "Cadeira Extensora",
+            sets: "3",
+            reps: "12-15",
+            importance: "Isolamento dos quadríceps",
+            technique: "Contraia o músculo no topo.",
+          },
+          {
+            name: "Mesa Flexora",
+            sets: "4",
+            reps: "12-15",
+            importance: "Desenvolvimento dos isquiotibiais",
+            technique: "Evite arqueamento excessivo das costas.",
+          },
+          {
+            name: "Stiff",
+            sets: "3",
+            reps: "10-12",
+            importance: "Trabalha isquiotibiais e glúteos",
+            technique: "Mantenha as pernas levemente flexionadas.",
+          },
+          {
+            name: "Panturrilha em Pé",
+            sets: "5",
+            reps: "15-20",
+            importance: "Desenvolvimento das panturrilhas",
+            technique: "Eleve-se o mais alto possível.",
+          },
+        ],
+      },
+    ],
+  }
+}
+
+// Plano de 6 dias - PPL 2x (Push/Pull/Legs)
+function generate6DaySplit(): Workout {
+  return {
+    split: "PPL 2x (Push/Pull/Legs)",
+    routine: [
+      {
+        day: "Dia 1",
+        focus: "Push A (Peito, Ombros, Tríceps)",
+        exercises: [
+          {
+            name: "Supino Reto",
+            sets: "4",
+            reps: "8-10",
+            importance: "Exercício fundamental para desenvolvimento do peitoral",
+            technique: "Mantenha os cotovelos em ângulo de 45°.",
+          },
+          {
+            name: "Desenvolvimento Militar",
+            sets: "4",
+            reps: "8-10",
+            importance: "Desenvolve os deltóides",
+            technique: "Mantenha o core contraído.",
+          },
+          {
+            name: "Supino Inclinado",
+            sets: "3",
+            reps: "10-12",
+            importance: "Desenvolve a parte superior do peitoral",
+            technique: "Use um ângulo de 30°.",
+          },
+          {
+            name: "Elevação Lateral",
+            sets: "3",
+            reps: "12-15",
+            importance: "Isolamento do deltóide lateral",
+            technique: "Eleve os braços até a altura dos ombros.",
+          },
+          {
+            name: "Tríceps Testa",
+            sets: "3",
+            reps: "10-12",
+            importance: "Desenvolve a cabeça longa do tríceps",
+            technique: "Mantenha os cotovelos apontados para cima.",
+          },
+        ],
+      },
+      {
+        day: "Dia 2",
+        focus: "Pull A (Costas e Bíceps)",
+        exercises: [
+          {
+            name: "Barra Fixa",
+            sets: "4",
+            reps: "Máximo",
+            importance: "Desenvolve a largura das costas",
+            technique: "Use uma pegada mais larga que os ombros.",
+          },
+          {
+            name: "Remada Curvada",
+            sets: "4",
+            reps: "8-10",
+            importance: "Desenvolve a espessura das costas",
+            technique: "Mantenha as costas paralelas ao solo.",
+          },
+          {
+            name: "Puxada Frontal",
+            sets: "3",
+            reps: "10-12",
+            importance: "Trabalha o dorsal",
+            technique: "Puxe a barra até a altura do peito.",
+          },
+          {
+            name: "Rosca Direta",
+            sets: "3",
+            reps: "10-12",
+            importance: "Desenvolvimento dos bíceps",
+            technique: "Mantenha os cotovelos junto ao corpo.",
+          },
+          {
+            name: "Rosca Martelo",
+            sets: "3",
+            reps: "12-15",
+            importance: "Trabalha o braquial e bíceps",
+            technique: "Mantenha os punhos neutros.",
+          },
+        ],
+      },
+      {
+        day: "Dia 3",
+        focus: "Legs A (Pernas)",
+        exercises: [
+          {
+            name: "Agachamento",
+            sets: "5",
+            reps: "6-10",
+            importance: "Exercício fundamental para desenvolvimento das pernas",
+            technique: "Mantenha o peito erguido.",
+          },
+          {
+            name: "Leg Press",
+            sets: "4",
+            reps: "10-15",
+            importance: "Complementa o agachamento",
+            technique: "Posicione os pés na parte superior da plataforma.",
+          },
+          {
+            name: "Cadeira Extensora",
+            sets: "3",
+            reps: "12-15",
+            importance: "Isolamento dos quadríceps",
+            technique: "Contraia o músculo no topo.",
+          },
+          {
+            name: "Mesa Flexora",
+            sets: "3",
+            reps: "12-15",
+            importance: "Desenvolvimento dos isquiotibiais",
+            technique: "Evite arqueamento excessivo das costas.",
+          },
+          {
+            name: "Panturrilha em Pé",
+            sets: "4",
+            reps: "15-20",
+            importance: "Desenvolvimento das panturrilhas",
+            technique: "Eleve-se o mais alto possível.",
+          },
+        ],
+      },
+      {
+        day: "Dia 4",
+        focus: "Push B (Peito, Ombros, Tríceps)",
+        exercises: [
+          {
+            name: "Supino Inclinado com Halteres",
+            sets: "4",
+            reps: "8-10",
+            importance: "Desenvolve a parte superior do peitoral",
+            technique: "Permite maior amplitude de movimento.",
+          },
+          {
+            name: "Desenvolvimento com Halteres",
+            sets: "4",
+            reps: "8-10",
+            importance: "Trabalha os deltóides de forma equilibrada",
+            technique: "Mantenha o core contraído.",
+          },
+          {
+            name: "Crucifixo",
+            sets: "3",
+            reps: "10-12",
+            importance: "Isolamento do peitoral",
+            technique: "Mantenha um leve dobramento nos cotovelos.",
+          },
+          {
+            name: "Elevação Frontal",
+            sets: "3",
+            reps: "12-15",
+            importance: "Trabalha o deltóide anterior",
+            technique: "Mantenha os cotovelos levemente flexionados.",
+          },
+          {
+            name: "Tríceps na Polia",
+            sets: "3",
+            reps: "12-15",
+            importance: "Isolamento dos tríceps",
+            technique: "Mantenha os cotovelos fixos.",
+          },
+        ],
+      },
+      {
+        day: "Dia 5",
+        focus: "Pull B (Costas e Bíceps)",
+        exercises: [
+          {
+            name: "Levantamento Terra",
+            sets: "4",
+            reps: "6-8",
+            importance: "Exercício composto completo para costas",
+            technique: "Mantenha as costas retas durante todo o movimento.",
+          },
+          {
+            name: "Remada Unilateral",
+            sets: "4",
+            reps: "10-12",
+            importance: "Trabalha cada lado independentemente",
+            technique: "Mantenha o tronco paralelo ao solo.",
+          },
+          {
+            name: "Pullover",
+            sets: "3",
+            reps: "12-15",
+            importance: "Expande a caixa torácica",
+            technique: "Mantenha os cotovelos levemente flexionados.",
+          },
+          {
+            name: "Rosca Scott",
+            sets: "3",
+            reps: "10-12",
+            importance: "Isola o bíceps",
+            technique: "Mantenha os cotovelos apoiados.",
+          },
+          {
+            name: "Rosca Concentrada",
+            sets: "3",
+            reps: "12-15",
+            importance: "Máximo isolamento do bíceps",
+            technique: "Foque na contração no topo.",
+          },
+        ],
+      },
+      {
+        day: "Dia 6",
+        focus: "Legs B (Pernas)",
+        exercises: [
+          {
+            name: "Agachamento Frontal",
+            sets: "4",
+            reps: "8-12",
+            importance: "Variação que enfatiza os quadríceps",
+            technique: "Mantenha o tronco mais ereto.",
+          },
+          {
+            name: "Stiff",
+            sets: "4",
+            reps: "10-12",
+            importance: "Desenvolvimento dos isquiotibiais e glúteos",
+            technique: "Mantenha as pernas levemente flexionadas.",
+          },
+          {
+            name: "Avanço",
+            sets: "3",
+            reps: "10-12 (cada perna)",
+            importance: "Trabalha as pernas unilateralmente",
+            technique: "Mantenha o joelho alinhado com o pé.",
+          },
+          {
+            name: "Cadeira Abdutora",
+            sets: "3",
+            reps: "15-20",
+            importance: "Isolamento dos glúteos",
+            technique: "Controle o movimento de volta.",
+          },
+          {
+            name: "Panturrilha Sentado",
+            sets: "4",
+            reps: "15-20",
+            importance: "Enfatiza o sóleo",
+            technique: "Pausa de 1 segundo no topo.",
+          },
+        ],
+      },
+    ],
+  }
+}

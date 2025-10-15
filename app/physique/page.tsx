@@ -5,12 +5,9 @@ import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Crown, Star } from "lucide-react"
 import type { UserProfile } from "@/types"
-import { PremiumManager } from "@/lib/premium"
 
-// Referências de físico para homens
+// Referências de físico para homens - TODOS LIBERADOS
 const malePhysiques = [
   {
     id: "arnold",
@@ -18,7 +15,6 @@ const malePhysiques = [
     description: "Volume clássico e simetria",
     svgPath: "M50 0 L65 20 L60 50 L75 80 L60 110 L70 150 L55 200 L45 200 L30 150 L40 110 L25 80 L40 50 L35 20 Z",
     category: "bodybuilder",
-    premium: true,
   },
   {
     id: "cbum",
@@ -26,7 +22,6 @@ const malePhysiques = [
     description: "Classic Physique moderno",
     svgPath: "M50 0 L60 25 L55 55 L70 85 L55 115 L65 155 L52 200 L48 200 L35 155 L45 115 L30 85 L45 55 L40 25 Z",
     category: "bodybuilder",
-    premium: true,
   },
   {
     id: "ramon",
@@ -34,15 +29,13 @@ const malePhysiques = [
     description: "Proporção e definição brasileira",
     svgPath: "M50 0 L58 22 L54 52 L68 82 L53 112 L62 152 L51 200 L49 200 L38 152 L47 112 L32 82 L46 52 L42 22 Z",
     category: "bodybuilder",
-    premium: true,
   },
   {
     id: "zyzz",
     name: "Zyzz",
     description: "Estética e definição",
-    svgPath: "M50 0 L55 28 L52 58 L65 88 L51 118 L58 158 L50 200 L50 200 L42 158 L49 118 L35 88 L48 58 L45 28 Z",
+    svgPath: "M50 0 L55 28 L52 58 L65 88 L51 118 L58 158 L50 200 L50 200 L42 158 L50 118 L38 88 L47 58 L44 28 Z",
     category: "aesthetic",
-    premium: true,
   },
   {
     id: "larry",
@@ -50,7 +43,6 @@ const malePhysiques = [
     description: "Força e massa extrema",
     svgPath: "M50 0 L68 25 L64 50 L80 75 L65 110 L78 155 L55 200 L45 200 L22 155 L35 110 L20 75 L36 50 L32 25 Z",
     category: "powerlifter",
-    premium: true,
   },
   {
     id: "david",
@@ -58,15 +50,13 @@ const malePhysiques = [
     description: "Estética moderna",
     svgPath: "M50 0 L56 28 L53 58 L62 88 L50 118 L58 158 L50 200 L50 200 L42 158 L50 118 L38 88 L47 58 L44 28 Z",
     category: "aesthetic",
-    premium: true,
   },
   {
     id: "cristiano",
     name: "Cristiano Ronaldo",
     description: "Atlético e definido",
-    svgPath: "M50 0 L58 25 L54 55 L62 85 L50 115 L58 155 L50 200 L50 200 L42 155 L50 115 L38 85 L46 55 L42 25 Z",
+    svgPath: "M50 0 L58 25 L54 55 L62 85 L50 115 L58 155 L50 200 L50 200 L42 158 L50 115 L38 85 L46 55 L42 25 Z",
     category: "athlete",
-    premium: false,
   },
   {
     id: "henry",
@@ -74,7 +64,6 @@ const malePhysiques = [
     description: "Musculoso e proporcional",
     svgPath: "M50 0 L62 22 L58 52 L70 82 L58 112 L66 152 L53 200 L47 200 L34 152 L42 112 L30 82 L42 52 L38 22 Z",
     category: "actor",
-    premium: false,
   },
   {
     id: "hemsworth",
@@ -82,7 +71,6 @@ const malePhysiques = [
     description: "Físico de super-herói",
     svgPath: "M50 0 L63 20 L59 50 L72 80 L59 110 L68 150 L54 200 L46 200 L32 150 L41 110 L28 80 L41 50 L37 20 Z",
     category: "actor",
-    premium: false,
   },
   {
     id: "michael",
@@ -90,7 +78,6 @@ const malePhysiques = [
     description: "Atlético e definido",
     svgPath: "M50 0 L60 22 L56 52 L66 82 L54 112 L62 152 L51 200 L49 200 L38 152 L46 112 L34 82 L44 52 L40 22 Z",
     category: "actor",
-    premium: false,
   },
   {
     id: "the_rock",
@@ -98,7 +85,6 @@ const malePhysiques = [
     description: "Massa e carisma",
     svgPath: "M50 0 L70 20 L66 50 L82 80 L68 110 L80 150 L58 200 L42 200 L20 150 L32 110 L18 80 L34 50 L30 20 Z",
     category: "actor",
-    premium: false,
   },
   {
     id: "lebron",
@@ -106,11 +92,10 @@ const malePhysiques = [
     description: "Atlético e poderoso",
     svgPath: "M50 0 L64 25 L60 55 L74 85 L60 115 L70 160 L54 200 L46 200 L30 160 L40 115 L26 85 L40 55 L36 25 Z",
     category: "athlete",
-    premium: false,
   },
 ]
 
-// Referências de físico para mulheres
+// Referências de físico para mulheres - TODAS LIBERADAS
 const femalePhysiques = [
   {
     id: "wellness",
@@ -118,7 +103,6 @@ const femalePhysiques = [
     description: "Foco em glúteos e pernas",
     svgPath: "M50 5 L58 25 L55 50 L65 75 L50 110 L68 160 L52 200 L48 200 L32 160 L50 110 L35 75 L45 50 L42 25 Z",
     category: "bodybuilder",
-    premium: true,
   },
   {
     id: "bikini",
@@ -126,7 +110,6 @@ const femalePhysiques = [
     description: "Definição e proporção",
     svgPath: "M50 5 L55 28 L52 52 L60 78 L50 112 L62 162 L51 200 L49 200 L38 162 L50 112 L40 78 L48 52 L45 28 Z",
     category: "bodybuilder",
-    premium: true,
   },
   {
     id: "figure",
@@ -134,7 +117,6 @@ const femalePhysiques = [
     description: "Mais muscularidade",
     svgPath: "M50 2 L62 28 L58 55 L72 80 L58 115 L70 160 L54 200 L46 200 L30 160 L42 115 L28 80 L42 55 L38 28 Z",
     category: "bodybuilder",
-    premium: true,
   },
   {
     id: "physique",
@@ -142,7 +124,6 @@ const femalePhysiques = [
     description: "Muscularidade avançada",
     svgPath: "M50 0 L68 25 L64 50 L80 75 L65 110 L78 155 L55 200 L45 200 L22 155 L35 110 L20 75 L36 50 L32 25 Z",
     category: "bodybuilder",
-    premium: true,
   },
   {
     id: "gracyanne",
@@ -150,7 +131,6 @@ const femalePhysiques = [
     description: "Fitness brasileira",
     svgPath: "M50 5 L60 25 L57 50 L68 75 L55 110 L65 160 L52 200 L48 200 L35 160 L45 110 L32 75 L43 50 L40 25 Z",
     category: "fitness",
-    premium: true,
   },
   {
     id: "eva",
@@ -158,7 +138,6 @@ const femalePhysiques = [
     description: "Fitness e wellness",
     svgPath: "M50 5 L58 28 L55 52 L64 78 L52 112 L62 162 L51 200 L49 200 L38 162 L48 112 L36 78 L45 52 L42 28 Z",
     category: "fitness",
-    premium: true,
   },
   {
     id: "goulart",
@@ -166,7 +145,6 @@ const femalePhysiques = [
     description: "Modelo fitness",
     svgPath: "M50 5 L56 25 L53 50 L58 75 L48 110 L58 160 L50 200 L50 200 L42 160 L52 110 L42 75 L47 50 L44 25 Z",
     category: "model",
-    premium: false,
   },
   {
     id: "alba",
@@ -174,7 +152,6 @@ const femalePhysiques = [
     description: "Tonificada e proporcional",
     svgPath: "M50 5 L54 28 L51 52 L56 78 L48 112 L56 162 L50 200 L50 200 L44 162 L52 112 L44 78 L49 52 L46 28 Z",
     category: "actor",
-    premium: false,
   },
   {
     id: "serena",
@@ -182,7 +159,6 @@ const femalePhysiques = [
     description: "Atlética e poderosa",
     svgPath: "M50 5 L60 25 L57 50 L68 75 L55 110 L65 160 L52 200 L48 200 L35 160 L45 110 L32 75 L43 50 L40 25 Z",
     category: "athlete",
-    premium: false,
   },
   {
     id: "alex",
@@ -190,7 +166,6 @@ const femalePhysiques = [
     description: "Atlética e definida",
     svgPath: "M50 5 L56 28 L53 52 L60 78 L48 112 L58 162 L50 200 L50 200 L42 162 L52 112 L40 78 L47 52 L44 28 Z",
     category: "athlete",
-    premium: false,
   },
   {
     id: "ronda",
@@ -198,11 +173,10 @@ const femalePhysiques = [
     description: "Lutadora e atleta",
     svgPath: "M50 5 L58 25 L55 50 L66 75 L54 110 L64 160 L52 200 L48 200 L36 160 L46 110 L34 75 L45 50 L42 25 Z",
     category: "athlete",
-    premium: false,
   },
 ]
 
-function PhysiqueCard({ physique, isSelected, onSelect, index, isPremium }: any) {
+function PhysiqueCard({ physique, isSelected, onSelect, index }: any) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -223,14 +197,6 @@ function PhysiqueCard({ physique, isSelected, onSelect, index, isPremium }: any)
       }`}
     >
       <div className="bg-gradient-to-b from-gray-900 to-black p-6">
-        {/* Premium Badge */}
-        {isPremium && (
-          <div className="absolute top-3 left-3 bg-yellow-500 text-black rounded-full px-2 py-1 text-xs font-bold flex items-center gap-1">
-            <Crown size={12} />
-            PRO
-          </div>
-        )}
-
         {/* Silhueta SVG */}
         <div className="flex justify-center mb-4 relative">
           <motion.div
@@ -309,9 +275,6 @@ export default function PhysiquePage() {
   const [userProfile, setUserProfile] = useState<Partial<UserProfile>>({})
   const [selectedPhysique, setSelectedPhysique] = useState<string>("")
   const [category, setCategory] = useState<string>("all")
-  const [showPremiumModal, setShowPremiumModal] = useState(false)
-  const [selectedPremiumPhysique, setSelectedPremiumPhysique] = useState<string | null>(null)
-  const [premiumManager] = useState(() => PremiumManager.getInstance())
 
   useEffect(() => {
     const storedProfile = localStorage.getItem("userProfile")
@@ -323,14 +286,6 @@ export default function PhysiquePage() {
   }, [router])
 
   const handleSelectPhysique = (id: string) => {
-    const physique = physiques.find((p) => p.id === id)
-
-    if (physique?.premium) {
-      setSelectedPremiumPhysique(id)
-      setShowPremiumModal(true)
-      return
-    }
-
     setSelectedPhysique(id)
   }
 
@@ -343,28 +298,6 @@ export default function PhysiquePage() {
       localStorage.setItem("userProfile", JSON.stringify(updatedProfile))
       router.push("/loading")
     }
-  }
-
-  const handlePurchasePlan = async (planId: string) => {
-    const result = await premiumManager.purchasePlan(planId)
-    
-    if (result.success) {
-      // Se a compra foi bem-sucedida e temos um físico premium selecionado
-      if (selectedPremiumPhysique) {
-        setSelectedPhysique(selectedPremiumPhysique)
-        setShowPremiumModal(false)
-      }
-    }
-  }
-
-  const handleFreeTrial = () => {
-    // Iniciar teste grátis de 7 dias
-    premiumManager.purchasePlan("trial").then(result => {
-      if (result.success && selectedPremiumPhysique) {
-        setSelectedPhysique(selectedPremiumPhysique)
-        setShowPremiumModal(false)
-      }
-    })
   }
 
   // Selecionar físicos baseado no gênero
@@ -392,7 +325,6 @@ export default function PhysiquePage() {
   ]
 
   const genderTitle = userProfile.gender === "female" ? "Referências Femininas" : "Referências Masculinas"
-  const premiumCount = physiques.filter((p) => p.premium).length
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 pt-8 relative">
@@ -420,31 +352,9 @@ export default function PhysiquePage() {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <h2 className="text-3xl font-bold mb-2">{genderTitle}</h2>
-          <p className="text-gray-400 mb-4">Selecione o físico que você deseja alcançar</p>
-
-          {/* Premium CTA */}
-          <Card className="bg-gradient-to-r from-yellow-500/10 to-red-500/10 border-yellow-500/30 mb-6">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-yellow-500 rounded-full">
-                    <Star size={20} className="text-black" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-white">Desbloqueie {premiumCount} Físicos Premium</h3>
-                    <p className="text-sm text-gray-400">Arnold, CBum, Ramon, Zyzz, Wellness e muito mais!</p>
-                  </div>
-                </div>
-                <Button
-                  className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold"
-                  onClick={() => setShowPremiumModal(true)}
-                >
-                  <Crown className="mr-2" size={16} />
-                  Upgrade
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <p className="text-gray-400 mb-4">
+            Selecione o físico que você deseja alcançar - <span className="text-green-400 font-bold">100% GRÁTIS</span>
+          </p>
         </motion.div>
 
         <motion.div
@@ -475,7 +385,6 @@ export default function PhysiquePage() {
                 isSelected={selectedPhysique === physique.id}
                 onSelect={handleSelectPhysique}
                 index={index}
-                isPremium={physique.premium}
               />
             ))}
           </AnimatePresence>
@@ -492,4 +401,12 @@ export default function PhysiquePage() {
               className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black/90 to-transparent flex justify-center z-30"
             >
               <Button size="lg" className="px-8 font-bold text-lg" onClick={handleContinue}>
-                \
+                Avançar
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </main>
+  )
+}

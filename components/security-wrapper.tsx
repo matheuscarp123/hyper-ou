@@ -3,7 +3,7 @@
 import type React from "react"
 import { useEffect } from "react"
 import { SecurityManager } from "@/lib/security"
-import { LICENSE_INFO, validateLicense, logAccess } from "@/lib/license"
+import { LICENSE_INFO, validateLicense } from "@/lib/license"
 
 interface SecurityWrapperProps {
   children: React.ReactNode
@@ -25,17 +25,9 @@ export function SecurityWrapper({ children }: SecurityWrapperProps) {
       return
     }
 
-    // Log de acesso (apenas em produção)
-    try {
-      logAccess()
-    } catch (error) {
-      console.warn("Erro no log de acesso:", error)
-    }
-
     // Ativar proteções apenas em produção
     if (typeof window !== "undefined" && !window.location.hostname.includes("localhost")) {
       security.enableAntiDebug()
-      security.addWatermark()
       security.protectSource()
     }
 

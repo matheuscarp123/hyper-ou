@@ -4,7 +4,8 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Logo } from "@/components/logo"
-import type { UserProfile, FitnessProfile, Workout } from "@/types"
+import type { UserProfile, FitnessProfile } from "@/types"
+import { generateWorkoutPlan } from "@/lib/generate-workout"
 
 const loadingMessages = [
   "Analisando seu perfil...",
@@ -46,16 +47,18 @@ export default function LoadingPage() {
       })
     }, 150)
 
-    // Gerar planos (simulado)
+    // Gerar planos usando a função dedicada
     const generatePlans = async () => {
       try {
         // Simular tempo de processamento
         await new Promise((resolve) => setTimeout(resolve, 15000))
 
-        // Gerar plano baseado no perfil
+        // Gerar plano baseado no perfil (agora com dias corretos)
+        const workout = await generateWorkoutPlan(userProfile)
+
         const fitnessProfile: FitnessProfile = {
           user: userProfile,
-          workout: generateWorkoutPlan(userProfile),
+          workout,
           diet: generateDietPlan(userProfile),
         }
 
@@ -149,170 +152,6 @@ export default function LoadingPage() {
       </motion.div>
     </main>
   )
-}
-
-// Função para gerar plano de treino baseado no perfil
-function generateWorkoutPlan(userProfile: UserProfile): Workout {
-  const { physique, trainingDays = 3 } = userProfile
-
-  // Definir o tipo de divisão baseado nos dias disponíveis
-  let split = ""
-
-  switch (trainingDays) {
-    case 2:
-      split = "Full Body 2x"
-      break
-    case 3:
-      split = "ABC (Corpo dividido em 3)"
-      break
-    case 4:
-      split = "Upper/Lower 2x"
-      break
-    case 5:
-      split = "ABCDE (5 grupos musculares)"
-      break
-    case 6:
-      split = "PPL 2x (Push/Pull/Legs)"
-      break
-    default:
-      split = "ABC (Corpo dividido em 3)"
-  }
-
-  // Plano básico para qualquer físico com 3 dias
-  const basicPlan: Workout = {
-    split,
-    routine: [
-      {
-        day: "Dia A",
-        focus: "Peito e Tríceps",
-        exercises: [
-          {
-            name: "Supino Reto",
-            sets: "4",
-            reps: "8-12",
-            importance: "Exercício fundamental para desenvolvimento do peitoral, base para um tórax forte e definido.",
-            technique:
-              "Mantenha os cotovelos em ângulo de 45° em relação ao corpo e desça a barra até tocar levemente o peito.",
-          },
-          {
-            name: "Supino Inclinado",
-            sets: "3",
-            reps: "8-12",
-            importance: "Desenvolve a parte superior do peitoral, criando a aparência completa e cheia do tórax.",
-            technique:
-              "Use um ângulo de 30° para máxima ativação do peitoral superior com mínimo envolvimento dos deltóides.",
-          },
-          {
-            name: "Crucifixo",
-            sets: "3",
-            reps: "10-12",
-            importance:
-              "Isola o peitoral e proporciona maior amplitude de movimento, esticando as fibras para máximo crescimento.",
-            technique:
-              "Mantenha um leve dobramento nos cotovelos durante todo o movimento e sinta o alongamento no peitoral.",
-          },
-          {
-            name: "Tríceps Testa",
-            sets: "3",
-            reps: "10-12",
-            importance: "Desenvolve a cabeça longa do tríceps para braços volumosos e definidos.",
-            technique: "Mantenha os cotovelos apontados para cima e não os deixe abrir durante o movimento.",
-          },
-          {
-            name: "Tríceps Corda",
-            sets: "3",
-            reps: "12-15",
-            importance: "Permite maior supinação no final do movimento, ativando todas as cabeças do tríceps.",
-            technique: "Abra as cordas para os lados no final do movimento para máxima contração.",
-          },
-        ],
-      },
-      {
-        day: "Dia B",
-        focus: "Costas e Bíceps",
-        exercises: [
-          {
-            name: "Barra Fixa",
-            sets: "4",
-            reps: "Máximo",
-            importance: "Desenvolve a largura das costas, essencial para o formato em V do torso.",
-            technique: "Use uma pegada mais larga que os ombros e puxe até o queixo ultrapassar a barra.",
-          },
-          {
-            name: "Remada Curvada",
-            sets: "4",
-            reps: "10-12",
-            importance: "Desenvolve a espessura das costas, complementando a largura para o físico completo.",
-            technique: "Mantenha as costas paralelas ao solo e puxe o peso em direção ao umbigo.",
-          },
-          {
-            name: "Puxada Frontal",
-            sets: "3",
-            reps: "10-12",
-            importance: "Trabalha o dorsal com ênfase na largura, criando o V-taper desejado.",
-            technique: "Puxe a barra até a altura do peito, contraindo as escápulas.",
-          },
-          {
-            name: "Rosca Direta",
-            sets: "4",
-            reps: "8-12",
-            importance: "Exercício básico para desenvolvimento dos bíceps, permitindo usar cargas mais pesadas.",
-            technique: "Mantenha os cotovelos junto ao corpo e não balance durante o movimento.",
-          },
-          {
-            name: "Rosca Martelo",
-            sets: "3",
-            reps: "12-15",
-            importance: "Trabalha o braquial e bíceps para braços mais grossos e definidos.",
-            technique: "Mantenha os punhos neutros durante todo o movimento.",
-          },
-        ],
-      },
-      {
-        day: "Dia C",
-        focus: "Pernas e Ombros",
-        exercises: [
-          {
-            name: "Agachamento",
-            sets: "4",
-            reps: "8-12",
-            importance: "Exercício fundamental para desenvolvimento completo das pernas e estimulação hormonal.",
-            technique: "Mantenha o peito erguido e desça até que as coxas fiquem paralelas ao solo.",
-          },
-          {
-            name: "Leg Press",
-            sets: "3",
-            reps: "10-15",
-            importance: "Complementa o agachamento para desenvolvimento dos quadríceps.",
-            technique: "Posicione os pés na parte superior da plataforma para maior ênfase nos glúteos.",
-          },
-          {
-            name: "Desenvolvimento Militar",
-            sets: "4",
-            reps: "8-12",
-            importance: "Desenvolve os três feixes do deltóide, criando ombros largos e imponentes.",
-            technique: "Mantenha o core contraído e não arqueie as costas durante o movimento.",
-          },
-          {
-            name: "Elevação Lateral",
-            sets: "4",
-            reps: "12-15",
-            importance: "Isolamento do deltóide lateral, criando a largura característica dos ombros.",
-            technique: "Mantenha um leve dobramento nos cotovelos e eleve os braços até a altura dos ombros.",
-          },
-          {
-            name: "Panturrilha em Pé",
-            sets: "4",
-            reps: "15-20",
-            importance: "Desenvolvimento das panturrilhas para completar o visual das pernas.",
-            technique: "Eleve-se o mais alto possível e segure por 1 segundo no topo para máxima contração.",
-          },
-        ],
-      },
-    ],
-  }
-
-  return basicPlan
 }
 
 // Função para gerar plano de dieta baseado no perfil

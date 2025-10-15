@@ -101,27 +101,8 @@ export class SecurityManager {
 
   // Watermark invisível
   public addWatermark(): void {
-    if (typeof document !== "undefined") {
-      const watermark = document.createElement("div")
-      watermark.style.position = "fixed"
-      watermark.style.top = "0"
-      watermark.style.left = "0"
-      watermark.style.width = "100%"
-      watermark.style.height = "100%"
-      watermark.style.pointerEvents = "none"
-      watermark.style.zIndex = "9999"
-      watermark.style.opacity = "0.005"
-      watermark.style.fontSize = "12px"
-      watermark.style.color = "#ffffff"
-      watermark.innerHTML = `
-        <div style="transform: rotate(-45deg); position: absolute; top: 50%; left: 50%;">
-          HyperGym © 2024 Matheus Carvalho - Todos os direitos reservados
-          <br>Uso não autorizado é crime - Lei 9.610/98
-          <br>ID: ${Date.now()}-${Math.random().toString(36).substr(2, 9)}
-        </div>
-      `
-      document.body.appendChild(watermark)
-    }
+    // Watermark removido
+    return
   }
 
   // Proteção contra cópia de código
