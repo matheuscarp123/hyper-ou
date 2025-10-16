@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation"
 import { LogoWithText } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
+import { AccessControl } from "@/lib/access-control"
 
-// Frases motivacionais que serão exibidas na tela inicial
 const motivationalPhrases = [
   "Seu personal trainer e nutricionista de bolso - 100% GRÁTIS",
   "Baseado na rotina dos maiores atletas (Arnold, CBum, Ramon, Zyzz)",
@@ -25,6 +25,10 @@ export default function Home() {
   useEffect(() => {
     setIsLoaded(true)
 
+    // Inicializar controle de acesso
+    const accessControl = AccessControl.getInstance()
+    accessControl.trackEvent("home_page_viewed")
+
     // Alternar frases motivacionais a cada 5 segundos
     const phraseInterval = setInterval(() => {
       setCurrentPhraseIndex((prev) => (prev + 1) % motivationalPhrases.length)
@@ -36,17 +40,22 @@ export default function Home() {
       router.push("/dashboard")
     }
 
-    // Limpar o intervalo quando o componente for desmontado
     return () => clearInterval(phraseInterval)
   }, [router])
+
+  const handleStart = () => {
+    const accessControl = AccessControl.getInstance()
+    accessControl.trackEvent("start_button_clicked")
+    router.push("/onboarding")
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 relative overflow-hidden">
       {/* Background grid pattern */}
-      <div className="absolute inset-0 z-0 bg-black bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+      <div className="absolute inset-0 z-0 bg-black bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:40px_40px]" />
 
       {/* Radial gradient overlay */}
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,_rgba(34,197,94,0.1)_0%,_rgba(0,0,0,0)_60%)]"></div>
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,_rgba(34,197,94,0.1)_0%,_rgba(0,0,0,0)_60%)]" />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
@@ -66,7 +75,7 @@ export default function Home() {
           <span className="text-black font-black text-lg">100% GRÁTIS</span>
         </motion.div>
 
-        {/* Frases motivacionais rotativas com transição horizontal */}
+        {/* Frases motivacionais */}
         <div className="mt-6 h-16 flex items-center justify-center max-w-md overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.p
@@ -90,7 +99,7 @@ export default function Home() {
           <Button
             size="lg"
             className="mt-8 px-8 font-bold text-lg bg-green-600 hover:bg-green-700"
-            onClick={() => router.push("/onboarding")}
+            onClick={handleStart}
           >
             COMEÇAR AGORA <ArrowRight className="ml-2" size={18} />
           </Button>

@@ -2,7 +2,7 @@
   "name": "hypergym",
   "version": "1.0.0",
   "private": true,
-  "description": "HyperGym - Personal Training App by Matheus Carvalho",
+  "description": "HyperGym - Personal Training App 100% FREE",
   "homepage": "https://hypergym.vercel.app",
   "license": "PROPRIETARY",
   "author": "Matheus Carvalho <matheus.carvalho.dev@gmail.com>",
@@ -11,8 +11,8 @@
     "dev": "next dev",
     "export": "next build",
     "lint": "next lint",
-    "preview": "next dev",
-    "start": "next start"
+    "start": "next start",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@capacitor/cli": "latest",
