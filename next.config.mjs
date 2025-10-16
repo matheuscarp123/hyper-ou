@@ -12,6 +12,8 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  reactStrictMode: true,
+  poweredByHeader: false,
   // Proteções de segurança
   async headers() {
     return [
@@ -38,10 +40,6 @@ const nextConfig = {
       },
     ]
   },
-  // Otimizações de build
-  swcMinify: true,
-  reactStrictMode: true,
-  poweredByHeader: false,
 }
 
 export default nextConfig
